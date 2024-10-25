@@ -46,9 +46,9 @@ class InstallPlugin extends ConsoleCommand
         foreach ($pluginNames as $pluginName) {
             try {
                 $this->installPlugin($pluginName);
-                $output->writeln(sprintf("Installed plugin <info>%s</info>", $pluginName));
+                $output->writeln(sprintf("Installed or updated plugin <info>%s</info>", $pluginName));
             } catch (\Piwik\Plugins\CorePluginsAdmin\PluginInstallerException $e) {
-                $output->writeln(sprintf("<error>Unable to install plugin %s. %s</error>", $pluginName, $e->getMessage()));
+                $output->writeln(sprintf("<error>Unable to install or update plugin %s. %s</error>", $pluginName, $e->getMessage()));
                 continue;
             }
         }
