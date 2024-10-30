@@ -15,6 +15,7 @@ use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\IntranetMeasurable\Type as IntranetType;
 use Piwik\Plugins\MobileAppMeasurable;
+use Piwik\Plugins\SitesManager\SitesManager;
 use Piwik\Plugins\WebsiteMeasurable\Type as WebsiteType;
 use Piwik\Plugins\SitesManager\API;
 use Piwik\Plugins\SitesManager\Model;
@@ -1614,7 +1615,74 @@ class ApiTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/path', $excludedReferrers);
     }
 
+    public function testGetExcludedQueryParametersGlobalShowsErrorIfNoViewRights(): void
+    {
 
+    }
+
+    /**
+     * @dataProvider getExclusionTypesAndExpectedResults
+     */
+    public function testGetExcludedQueryParametersGlobalShowsCorrectParamsDependingOnExclusionType($exclusionType, $expected): void
+    {
+        Option::set(API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
+        Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, 'one,two');
+
+        $this->assertEquals(
+            $expected,
+            API::getInstance()->getExcludedQueryParametersGlobal()
+        );
+    }
+
+    public function getExclusionTypesAndExpectedResults(): \Generator
+    {
+        yield 'no exclusions' => ['no_exclusions', ''];
+        yield 'common PII exclusions' => ['common_pii_exclusions', implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE)];
+        yield 'custom exclusions' => ['custom_exclusions', 'one,two'];
+        yield 'empty exclusion type' => ['', 'one,two'];
+        yield 'false exclusion type' => [false, 'one,two'];
+    }
+
+    /**
+     * @dataProvider getExclusionTypesWithUrlParamsAndExpectedResults
+     */
+    public function testGetExclusionTypeForQueryParamsReturnsCorrectType($exclusionTypeSetting, string $excludedQueryParamsGlobal, string $expectedType): void
+    {
+        if ($exclusionTypeSetting === null) {
+            Option::delete(API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL);
+        } else {
+            Option::set(API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionTypeSetting);
+        }
+
+        Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $excludedQueryParamsGlobal);
+
+        $this->assertEquals(
+            $expectedType,
+            API::getInstance()->getExclusionTypeForQueryParams()
+        );
+    }
+
+    public function testSetExclusionTypeForQueryParamsThrowsExceptionIfInvalidValueProvided(): void
+    {
+        $this->expectExceptionMessage('The exclusion type you provided is invalid');
+        API::getInstance()->setExclusionTypeForQueryParams('bad_value');
+    }
+
+    public function testSetExclusionTypeForQueryParamsSetsTypeCorrectly(): void
+    {
+        API::getInstance()->setExclusionTypeForQueryParams('no_exclusions');
+        $this->assertEquals(
+            'no_exclusions',
+            API::getInstance()->getExclusionTypeForQueryParams()
+        );
+    }
+
+    public function getExclusionTypesWithUrlParamsAndExpectedResults(): \Generator
+    {
+        yield 'option exists already in options store' => ['no_exclusions', '', 'no_exclusions'];
+        yield 'option doesnt exist and excluded query parameters has data' => [null, 'myapp_name,myapp_email', 'custom_exclusions'];
+        yield 'option doesnt exist and excluded query parameters has no data' => [null, '', 'no_exclusions'];
+    }
 
     public function provideContainerConfig()
     {

@@ -54,7 +54,12 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         Piwik::checkUserHasSuperUserAccess();
 
-        return $this->renderTemplate('globalSettings');
+        return $this->renderTemplate(
+            'globalSettings',
+            [
+                'commonSensitiveQueryParams' => SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE
+            ]
+        );
     }
 
     public function getGlobalSettings()
@@ -73,6 +78,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $globalSettings['excludedQueryParametersGlobal'] = API::getInstance()->getExcludedQueryParametersGlobal();
         $globalSettings['excludedUserAgentsGlobal'] = API::getInstance()->getExcludedUserAgentsGlobal();
         $globalSettings['excludedReferrersGlobal'] = API::getInstance()->getExcludedReferrersGlobal();
+        $globalSettings['exclusionTypeForQueryParams'] = API::getInstance()->getExclusionTypeForQueryParams();
+
+        if ($globalSettings['exclusionTypeForQueryParams'] !== 'custom_exclusions') {
+            $globalSettings['excludedQueryParametersGlobal'] = '';
+        }
 
         return $response->getResponse($globalSettings);
     }
@@ -95,6 +105,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $searchKeywordParameters = Common::getRequestVar('searchKeywordParameters', $default = "");
             $searchCategoryParameters = Common::getRequestVar('searchCategoryParameters', $default = "");
             $keepURLFragments = Common::getRequestVar('keepURLFragments', $default = 0);
+            $exclusionTypeForQueryParams = Common::getRequestVar('exclusionTypeForQueryParams', $default = "");
 
             $api = API::getInstance();
             $api->setDefaultTimezone($timezone);
@@ -105,6 +116,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $api->setGlobalExcludedReferrers($excludedReferrers);
             $api->setGlobalSearchParameters($searchKeywordParameters, $searchCategoryParameters);
             $api->setKeepURLFragmentsGlobal($keepURLFragments);
+            $api->setExclusionTypeForQueryParams($exclusionTypeForQueryParams);
 
             $toReturn = $response->getResponse();
         } catch (Exception $e) {

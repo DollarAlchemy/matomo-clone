@@ -69,6 +69,7 @@ class API extends \Piwik\Plugin\API
     public const OPTION_EXCLUDED_USER_AGENTS_GLOBAL = 'SitesManager_ExcludedUserAgentsGlobal';
     public const OPTION_EXCLUDED_REFERRERS_GLOBAL = 'SitesManager_ExcludedReferrersGlobal';
     public const OPTION_KEEP_URL_FRAGMENTS_GLOBAL = 'SitesManager_KeepURLFragmentsGlobal';
+    public const OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL = 'SitesManager_ExcludeTypeQueryParamsGlobal';
 
     /**
      * @var SettingsProvider
@@ -1126,7 +1127,17 @@ class API extends \Piwik\Plugin\API
     public function getExcludedQueryParametersGlobal()
     {
         Piwik::checkUserHasSomeViewAccess();
-        return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+
+        switch ($this->getExclusionTypeForQueryParams()) {
+            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS:
+                return '';
+            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS:
+                return implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE);
+            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS:
+                return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+            default:
+                return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+        }
     }
 
     /**
@@ -1344,6 +1355,43 @@ class API extends \Piwik\Plugin\API
         $this->checkValidTimezone($defaultTimezone);
         Option::set(self::OPTION_DEFAULT_TIMEZONE, $defaultTimezone);
         return true;
+    }
+
+    public function setExclusionTypeForQueryParams(string $exclusionTypeForQueryParams): void
+    {
+        Piwik::checkUserHasSuperUserAccess();
+
+        if (!in_array($exclusionTypeForQueryParams, SitesManager::URL_PARAM_EXCLUSION_TYPES)) {
+            throw new Exception($this->translator->translate('SitesManager_ExceptionInvalidExclusionType'));
+        }
+
+        Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionTypeForQueryParams);
+
+        Cache::deleteTrackerCache();
+    }
+
+    /**
+     * Gets the exclusion type, if the option is not present in the store then it infers the type based on if there are
+     * custom exclusions already defined.
+     *
+     * @return string
+     */
+    public function getExclusionTypeForQueryParams(): string
+    {
+        Piwik::checkUserHasSomeViewAccess();
+
+        $result = Option::get(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL);
+
+        if (!empty($result)) {
+            return $result;
+        }
+
+        $excludedQueryParamsGlobal = Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+
+        if (empty($excludedQueryParamsGlobal)) {
+            return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS;
+        }
+        return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS;
     }
 
     /**

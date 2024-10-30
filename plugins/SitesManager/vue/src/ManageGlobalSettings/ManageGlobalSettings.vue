@@ -28,19 +28,6 @@
         </div>
       </div>
 
-      <div id="excludedQueryParametersGlobalHelp" class="inline-help-node">
-        <div>
-          {{ translate('SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/') }}
-
-          <br/><br/>
-
-          {{ translate(
-              'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters',
-              'phpsessid, sessionid, ...',
-            ) }}
-        </div>
-      </div>
-
       <div id="excludedUserAgentsGlobalHelp" class="inline-help-node">
         <div>
           {{ translate('SitesManager_GlobalExcludedUserAgentHelp1') }}
@@ -110,18 +97,11 @@
         />
       </div>
 
-      <div>
-        <Field
-          uicontrol="textarea"
-          name="excludedQueryParametersGlobal"
-          var-type="array"
-          v-model="excludedQueryParametersGlobal"
-          :title="translate('SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites')"
-          :introduction="translate('SitesManager_GlobalListExcludedQueryParameters')"
-          :inline-help="'#excludedQueryParametersGlobalHelp'"
-          :disabled="isLoading"
-        />
-      </div>
+      <ExcludeQueryParameterSettings
+        v-model:exclusionTypeForQueryParams="exclusionTypeForQueryParams"
+        v-model:excludedQueryParametersGlobal="excludedQueryParametersGlobal"
+        :commonSensitiveQueryParams="commonSensitiveQueryParams"
+      />
 
       <div>
         <Field
@@ -237,6 +217,7 @@ import { Field, SaveButton } from 'CorePluginsAdmin';
 import TimezoneStore from '../TimezoneStore/TimezoneStore';
 import CurrencyStore from '../CurrencyStore/CurrencyStore';
 import GlobalSettingsStore from '../GlobalSettingsStore/GlobalSettingsStore';
+import ExcludeQueryParameterSettings from './ExcludeQueryParameterSettings.vue';
 
 interface GlobalSettingsState {
   currentIpAddress: null|string;
@@ -251,6 +232,8 @@ interface GlobalSettingsState {
   searchKeywordParametersGlobal: string[];
   searchCategoryParametersGlobal: string[];
   isSaving: boolean;
+  queryParameterExclusionOptions: string[];
+  exclusionTypeForQueryParams: string;
 }
 
 interface IpFromHeaderResponse {
@@ -258,15 +241,14 @@ interface IpFromHeaderResponse {
 }
 
 export default defineComponent({
-  props: {
-    // TypeScript can't add state types if there are no properties (probably a bug in Vue)
-    // so we add one dummy property to get the compile to work
-    dummy: String,
-  },
   components: {
+    ExcludeQueryParameterSettings,
     ContentBlock,
     Field,
     SaveButton,
+  },
+  props: {
+    commonSensitiveQueryParams: [],
   },
   data(): GlobalSettingsState {
     const currentDate = new Date();
@@ -297,6 +279,7 @@ export default defineComponent({
       searchCategoryParametersGlobal:
         (settings.searchCategoryParametersGlobal || '').split(','),
       isSaving: false,
+      exclusionTypeForQueryParams: settings.exclusionTypeForQueryParams,
     };
   },
   created() {
@@ -317,6 +300,7 @@ export default defineComponent({
         .split(',');
       this.searchCategoryParametersGlobal = (settings.searchCategoryParametersGlobal || '')
         .split(',');
+      this.exclusionTypeForQueryParams = settings.exclusionTypeForQueryParams;
     });
 
     AjaxHelper.fetch<IpFromHeaderResponse>({ method: 'API.getIpFromHeader' }).then((response) => {
@@ -336,6 +320,7 @@ export default defineComponent({
         excludedReferrers: this.excludedReferrersGlobal.join(','),
         searchKeywordParameters: this.searchKeywordParametersGlobal.join(','),
         searchCategoryParameters: this.searchCategoryParametersGlobal.join(','),
+        exclusionTypeForQueryParams: this.exclusionTypeForQueryParams,
       }).then(() => {
         Matomo.helper.redirect({ showaddsite: false });
       }).finally(() => {
