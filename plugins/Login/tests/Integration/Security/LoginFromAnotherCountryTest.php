@@ -24,7 +24,6 @@ use Piwik\Tests\Framework\TestCase\IntegrationTestCase;
  */
 class LoginFromAnotherCountryTest extends IntegrationTestCase
 {
-
     private const IP_FRANCE = '194.57.91.215';
 
     private const IP_USA = '99.99.99.99';
@@ -97,7 +96,7 @@ class LoginFromAnotherCountryTest extends IntegrationTestCase
         // continue in USA
         $_SERVER['REMOTE_ADDR'] = self::IP_USA;
         Piwik::postEvent('Login.authenticate.processSuccessfulSession.end', [self::LOGIN]);
-        $this->assertEquals(Piwik::translate('Intl_Country_US') ,$this->loginCountry);
+        $this->assertEquals(Piwik::translate('Intl_Country_US'), $this->loginCountry);
     }
 
     public function testEmailIsSentWhenLoggingInFromAnUnknownCountry()
@@ -110,12 +109,12 @@ class LoginFromAnotherCountryTest extends IntegrationTestCase
         // continue in an unknown country
         $_SERVER['REMOTE_ADDR'] = self::IP_UNKNOWN;
         Piwik::postEvent('Login.authenticate.processSuccessfulSession.end', [self::LOGIN]);
-        $this->assertEquals(Piwik::translate('General_Unknown') ,$this->loginCountry);
+        $this->assertEquals(Piwik::translate('General_Unknown'), $this->loginCountry);
 
         // continue in the USA again
         $_SERVER['REMOTE_ADDR'] = self::IP_USA;
         Piwik::postEvent('Login.authenticate.processSuccessfulSession.end', [self::LOGIN]);
-        $this->assertEquals(Piwik::translate('Intl_Country_US') ,$this->loginCountry);
+        $this->assertEquals(Piwik::translate('Intl_Country_US'), $this->loginCountry);
     }
 
     public function emailIsNotSentWhenGeoIpNotAvailable()
