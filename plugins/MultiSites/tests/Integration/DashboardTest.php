@@ -96,6 +96,10 @@ class DashboardTest extends IntegrationTestCase
                 'revenue_evolution_trend' => 0,
                 'nb_conversions_evolution_trend' => 0,
                 'currencySymbol' => '$',
+                'hits' => '0',
+                'hits_evolution' => '0%',
+                'hits_evolution_trend' => 0,
+                'previous_Actions_hits' => 0,
             ],
             [
                 'label' => 'Site 2',
@@ -126,6 +130,10 @@ class DashboardTest extends IntegrationTestCase
                 'revenue_evolution_trend' => 0,
                 'nb_conversions_evolution_trend' => 0,
                 'currencySymbol' => '$',
+                'hits' => '0',
+                'hits_evolution' => '0%',
+                'hits_evolution_trend' => 0,
+                'previous_Actions_hits' => 0,
             ],
             [
                 'label' => 'Site 3',
@@ -156,6 +164,10 @@ class DashboardTest extends IntegrationTestCase
                 'revenue_evolution_trend' => 0,
                 'nb_conversions_evolution_trend' => 0,
                 'currencySymbol' => '$',
+                'hits' => '0',
+                'hits_evolution' => '0%',
+                'hits_evolution_trend' => 0,
+                'previous_Actions_hits' => 0,
             ],
         ];
         $this->assertEquals($expectedSites, $dashboard->getSites(array(), $limit = 10));
