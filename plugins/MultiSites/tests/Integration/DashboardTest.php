@@ -62,6 +62,7 @@ class DashboardTest extends IntegrationTestCase
             'nb_actions' => 0,
             'revenue' => 0,
             'nb_visits_lastdate' => 0,
+            'hits' => 0,
         );
         $this->assertEquals($expectedTotals, $dashboard->getTotals());
 
@@ -195,6 +196,10 @@ class DashboardTest extends IntegrationTestCase
                 'revenue_evolution_trend' => 0,
                 'nb_conversions_evolution_trend' => 0,
                 'currencySymbol' => '$',
+                'hits' => 0,
+                'hits_evolution' => '0%',
+                'hits_evolution_trend' => 0,
+                'previous_Actions_hits' => 0,
             ),
         );
         $dashboard->search('site 2');
