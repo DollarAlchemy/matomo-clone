@@ -15,7 +15,6 @@ use Piwik\Piwik;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\Login\Emails\LoginFromDifferentCountryEmail;
 use Piwik\Plugins\Login\Model;
-use Piwik\Plugins\Login\UserSettings;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 
