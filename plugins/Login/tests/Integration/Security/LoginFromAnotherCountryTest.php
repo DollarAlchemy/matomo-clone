@@ -117,7 +117,7 @@ class LoginFromAnotherCountryTest extends IntegrationTestCase
         $this->assertEquals(Piwik::translate('Intl_Country_US'), $this->loginCountry);
     }
 
-    public function emailIsNotSentWhenGeoIpNotAvailable()
+    public function testEmailIsNotSentWhenGeoIpNotAvailable()
     {
         LocationProvider::setCurrentProvider(LocationProvider\DisabledProvider::ID);
 
@@ -132,7 +132,7 @@ class LoginFromAnotherCountryTest extends IntegrationTestCase
         $this->assertEmpty($this->loginCountry);
     }
 
-    public function emailIsNotSentWhenUsingDefaultGeoIpProvider()
+    public function testEmailIsNotSentWhenUsingDefaultGeoIpProvider()
     {
         LocationProvider::setCurrentProvider(LocationProvider\DefaultProvider::ID);
 
