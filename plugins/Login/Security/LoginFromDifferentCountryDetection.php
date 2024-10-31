@@ -60,17 +60,15 @@ class LoginFromDifferentCountryDetection
 
     private function getLocation(): array
     {
-        if (null === $this->location) {
-            // since we checked whether the current provider is GeoIP,
-            // we can directly use it here
-            $provider = LocationProvider::getCurrentProvider();
-            $this->location = $provider->getLocation([
-                'ip' => IP::getIpFromHeader(),
-                'disable_fallbacks' => true,
-            ]) ?: [LocationProvider::COUNTRY_CODE_KEY => ''];
-        }
+        // since we checked whether the current provider is GeoIP,
+        // we can directly use it here
+        $provider = LocationProvider::getCurrentProvider();
+        $location = $provider->getLocation([
+            'ip' => IP::getIpFromHeader(),
+            'disable_fallbacks' => true,
+        ]) ?: [LocationProvider::COUNTRY_CODE_KEY => ''];
 
-        return $this->location;
+        return $location;
     }
 
     private function getCurrentLoginCountry(): string
