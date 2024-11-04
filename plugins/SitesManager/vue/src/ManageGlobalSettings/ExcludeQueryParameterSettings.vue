@@ -25,10 +25,24 @@
           {{ translate('SitesManager_ExclusionTypeDescriptionNoExclusions') }}
         </div>
         <div v-show="localExclusionTypeForQueryParams === 'common_pii_exclusions'">
-          {{ translate(
-            'SitesManager_ExclusionTypeDescriptionCommonPIIExclusions',
-            commonSensitiveQueryParams.join(', ')
-          ) }}
+          <p>{{ translate('SitesManager_ExclusionTypeDescriptionCommonPIIExclusions') }}</p>
+          <div>
+            <a href="javascript:;"
+               v-if="!showListOfCommonExclusions"
+               @click.prevent="showListOfCommonExclusions = true">
+                {{ translate('SitesManager_ExclusionViewListLink') }}
+              <span class="icon-chevron-down"></span>
+            </a>
+            <a href="javascript:;"
+               v-if="showListOfCommonExclusions"
+               @click.prevent="showListOfCommonExclusions = false">
+                {{ translate('SitesManager_ExclusionViewListLink') }}
+              <span class="icon-chevron-up"></span>
+            </a>
+          </div>
+          <div v-if="showListOfCommonExclusions">
+            {{ commonSensitiveQueryParams.join(', ') }}
+          </div>
         </div>
         <div v-show="localExclusionTypeForQueryParams === 'custom_exclusions'">
           {{ translate('SitesManager_ExclusionTypeDescriptionCustomExclusions') }}
@@ -84,6 +98,7 @@ interface ExcludeQueryParameterSettingsState {
   localExclusionTypeForQueryParams: string;
   localExcludedQueryParametersGlobal: string[];
   exclusionTypeOptions: ExclusionTypeOption[];
+  showListOfCommonExclusions: boolean;
 }
 
 export default defineComponent({
@@ -122,6 +137,7 @@ export default defineComponent({
           key: 'custom_exclusions',
         },
       ],
+      showListOfCommonExclusions: false,
     };
   },
   watch: {

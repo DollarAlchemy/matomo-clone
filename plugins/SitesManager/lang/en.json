@@ -206,8 +206,9 @@
         "ExclusionTypeOptionCommonPIIExclusions": "Sensible PII exclusions",
         "ExclusionTypeOptionCustomExclusions": "Custom exclusions",
         "ExclusionTypeDescriptionNoExclusions": "Select this option to include all URL parameters in tracking and reports. No parameters will be excluded, providing a complete view of the URL data for each visit.",
-        "ExclusionTypeDescriptionCommonPIIExclusions": "Choose this option to exclude a common set of potentially sensitive URL parameters from tracking and reports. These include these parameters: \"%1$s\"",
+        "ExclusionTypeDescriptionCommonPIIExclusions": "Choose this option to exclude a common set of potentially sensitive URL parameters from tracking and reports. You can see these exclusions below",
         "ExclusionTypeDescriptionCustomExclusions": "Enter your own list of URL parameters to exclude from tracking and reports. Customize further by pressing the button below the textarea to add a predefined set of common exclusions. You can adjust this list as needed to fit your privacy and tracking requirements.",
+        "ExclusionViewListLink": "View list of exclusions",
         "ExceptionInvalidExclusionType": "The exclusion type you provided is invalid"
     }
 }

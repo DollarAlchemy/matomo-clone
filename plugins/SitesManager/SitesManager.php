@@ -514,6 +514,7 @@ class SitesManager extends \Piwik\Plugin
         $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionNoExclusions';
         $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCommonPIIExclusions';
         $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCustomExclusions';
+        $translationKeys[] = 'SitesManager_ExclusionViewListLink';
     }
 
     public static function renderTrackingCodeEmail(int $idSite)
