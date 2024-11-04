@@ -232,7 +232,6 @@ interface GlobalSettingsState {
   searchKeywordParametersGlobal: string[];
   searchCategoryParametersGlobal: string[];
   isSaving: boolean;
-  queryParameterExclusionOptions: string[];
   exclusionTypeForQueryParams: string;
 }
 

@@ -6,7 +6,7 @@
 -->
 
 <template>
-  <div>
+  <div class="siteManagerGlobalExcludedUrlParameters">
       <div id="excludedQueryParametersGlobalHelp" class="inline-help-node">
         <div>
           {{ translate('SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/') }}
@@ -83,7 +83,7 @@ interface ExclusionTypeOption {
 interface ExcludeQueryParameterSettingsState {
   localExclusionTypeForQueryParams: string;
   localExcludedQueryParametersGlobal: string[];
-  exclusionTypeForQueryParams: ExclusionTypeOption;
+  exclusionTypeOptions: ExclusionTypeOption[];
 }
 
 export default defineComponent({
@@ -137,7 +137,7 @@ export default defineComponent({
       immediate: true,
     },
     excludedQueryParametersGlobal: {
-      handler(excludedQueryParametersGlobal: string) {
+      handler(excludedQueryParametersGlobal: string[]) {
         this.localExcludedQueryParametersGlobal = excludedQueryParametersGlobal;
       },
     },

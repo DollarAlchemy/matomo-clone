@@ -28,7 +28,7 @@ interface SaveGlobalSettingsParams {
   excludedReferrers: string;
   searchKeywordParameters: string;
   searchCategoryParameters: string;
-  excludeCommonPIIUrlParams: boolean;
+  exclusionTypeForQueryParams: string;
 }
 
 class GlobalSettingsStore {
