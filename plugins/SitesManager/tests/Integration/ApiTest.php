@@ -1615,11 +1615,6 @@ class ApiTest extends IntegrationTestCase
         $this->assertEquals('http://example.com/path', $excludedReferrers);
     }
 
-    public function testGetExcludedQueryParametersGlobalShowsErrorIfNoViewRights(): void
-    {
-
-    }
-
     /**
      * @dataProvider getExclusionTypesAndExpectedResults
      */
