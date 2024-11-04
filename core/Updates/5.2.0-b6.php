@@ -31,17 +31,17 @@ class Updates_5_2_0_b6 extends Updates
 
     public function getMigrations(Updater $updater)
     {
-        $beginOfCurrentYear = '01-01-' . Date::now()->toString('Y');
+        $startOfCurrentYear = '01-01-' . Date::now()->toString('Y');
 
         $commandToExecute = sprintf(
             './console core:invalidate-report-data --dates=%s,today --plugin=Actions.Actions_hits',
-            $beginOfCurrentYear
+            $startOfCurrentYear
         );
 
         $migrations = [
-            new CustomMigration(function () use ($beginOfCurrentYear) {
+            new CustomMigration(function () use ($startOfCurrentYear) {
                 $invalidator = StaticContainer::get(ArchiveInvalidator::class);
-                $invalidator->scheduleReArchiving('all', 'Actions', 'Actions_hits', Date::factory($beginOfCurrentYear));
+                $invalidator->scheduleReArchiving('all', 'Actions', 'Actions_hits', Date::factory($startOfCurrentYear));
             }, $commandToExecute)
         ];
 

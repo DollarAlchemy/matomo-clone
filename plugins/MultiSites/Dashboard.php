@@ -304,14 +304,14 @@ class Dashboard
         unset($request['filter_limit']);
 
         // filter_sort_column does not work correctly is a bug in MultiSites.getAll
-        $filterSprtColumnMapping = [
+        $filterSortColumnMapping = [
             'nb_pageviews' => 'Actions_nb_pageviews',
             'hits' => 'Actions_hits',
             'revenue' => 'Goal_revenue',
         ];
 
-        if (!empty($request['filter_sort_column']) && array_key_exists($request['filter_sort_column'], $filterSprtColumnMapping)) {
-            $request['filter_sort_column'] = $filterSprtColumnMapping[$request['filter_sort_column']];
+        if (!empty($request['filter_sort_column']) && array_key_exists($request['filter_sort_column'], $filterSortColumnMapping)) {
+            $request['filter_sort_column'] = $filterSortColumnMapping[$request['filter_sort_column']];
         }
 
         // make sure no limit filter is applied, we will do this manually
