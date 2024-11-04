@@ -1659,7 +1659,7 @@ class ApiTest extends IntegrationTestCase
 
     public function testSetExclusionTypeForQueryParamsThrowsExceptionIfInvalidValueProvided(): void
     {
-        $this->expectExceptionMessage('The exclusion type you provided is invalid');
+        $this->expectExceptionMessage('ExceptionInvalidExclusionType');
         API::getInstance()->setExclusionTypeForQueryParams('bad_value');
     }
 
