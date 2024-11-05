@@ -51,7 +51,7 @@ class LoginFromDifferentCountryDetection
     {
         $provider = LocationProvider::getCurrentProvider();
 
-        return $provider instanceof GeoIp2
+        return $provider->canBeUsedForLocationBasedSecurityChecks()
             && $provider->isAvailable()
             && $provider->isWorking()
             && true === $provider->getSupportedLocationInfo()[LocationProvider::COUNTRY_CODE_KEY];
