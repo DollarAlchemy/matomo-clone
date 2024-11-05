@@ -12,7 +12,6 @@ namespace Piwik\Plugins\Login\Security;
 use Piwik\Container\StaticContainer;
 use Piwik\IP;
 use Piwik\Piwik;
-use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\Login\Emails\LoginFromDifferentCountryEmail;
 use Piwik\Plugins\Login\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
