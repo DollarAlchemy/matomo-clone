@@ -208,6 +208,8 @@
         "ExclusionTypeDescriptionNoExclusions": "Select this option to include all URL parameters in tracking and reports. No parameters will be excluded, providing a complete view of the URL data for each visit.",
         "ExclusionTypeDescriptionCommonPIIExclusions": "Choose this option to exclude a common set of potentially sensitive URL parameters from tracking and reports. You can see these exclusions below",
         "ExclusionTypeDescriptionCustomExclusions": "Enter your own list of URL parameters to exclude from tracking and reports. Customize further by pressing the button below the textarea to add a predefined set of common exclusions. You can adjust this list as needed to fit your privacy and tracking requirements.",
-        "ExclusionViewListLink": "View list of exclusions"
+        "ExclusionViewListLink": "View list of exclusions",
+        "ExceptionEmptyQueryParamsForCustomType": "Query parameters to exclude must be provided when exclusion type is custom",
+        "ExceptionNonEmptyQueryParamsForNonCustomType": "Query parameters to exclude must not be provided when exclusion type is not custom"
     }
 }

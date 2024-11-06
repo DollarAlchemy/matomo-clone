@@ -1666,14 +1666,24 @@ class ApiTest extends IntegrationTestCase
 
     public function testSetGlobalQueryParamExclusionThrowsExceptionWhenInvalidExclusionTypeProvided(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('General_ValidatorErrorXNotWhitelisted');
 
         Api::getInstance()->setGlobalQueryParamExclusion('invalid');
     }
 
+    public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersNotPassedWhenCustomType(): void
+    {
+        $this->expectExceptionMessage('ExceptionEmptyQueryParamsForCustomType');
+
+        Api::getInstance()->setGlobalQueryParamExclusion(
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS,
+            ''
+        );
+    }
+
     public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersPassedWhenNotCustomType(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('ExceptionNonEmptyQueryParamsForNonCustomType');
 
         Api::getInstance()->setGlobalQueryParamExclusion(
             SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS,
