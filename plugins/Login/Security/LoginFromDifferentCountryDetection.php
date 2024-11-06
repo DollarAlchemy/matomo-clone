@@ -49,7 +49,7 @@ class LoginFromDifferentCountryDetection
             && $provider->canBeUsedForLocationBasedSecurityChecks()
             && $provider->isAvailable()
             && $provider->isWorking()
-            && true === $provider->getSupportedLocationInfo()[LocationProvider::COUNTRY_CODE_KEY];
+            && ($provider->getSupportedLocationInfo()[LocationProvider::COUNTRY_CODE_KEY] ?? false);
     }
 
     private function getLocation(): array
