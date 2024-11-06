@@ -45,7 +45,8 @@ class LoginFromDifferentCountryDetection
     {
         $provider = LocationProvider::getCurrentProvider();
 
-        return $provider->canBeUsedForLocationBasedSecurityChecks()
+        return null !== $provider
+            && $provider->canBeUsedForLocationBasedSecurityChecks()
             && $provider->isAvailable()
             && $provider->isWorking()
             && true === $provider->getSupportedLocationInfo()[LocationProvider::COUNTRY_CODE_KEY];
