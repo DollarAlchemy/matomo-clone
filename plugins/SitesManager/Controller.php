@@ -110,13 +110,12 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $api = API::getInstance();
             $api->setDefaultTimezone($timezone);
             $api->setDefaultCurrency($currency);
-            $api->setGlobalExcludedQueryParameters($excludedQueryParameters);
             $api->setGlobalExcludedIps($excludedIps);
             $api->setGlobalExcludedUserAgents($excludedUserAgents);
             $api->setGlobalExcludedReferrers($excludedReferrers);
             $api->setGlobalSearchParameters($searchKeywordParameters, $searchCategoryParameters);
             $api->setKeepURLFragmentsGlobal($keepURLFragments);
-            $api->setExclusionTypeForQueryParams($exclusionTypeForQueryParams);
+            $api->setGlobalQueryParamExclusion($exclusionTypeForQueryParams, $excludedQueryParameters);
 
             $toReturn = $response->getResponse();
         } catch (Exception $e) {

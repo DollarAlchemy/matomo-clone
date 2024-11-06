@@ -1657,26 +1657,75 @@ class ApiTest extends IntegrationTestCase
         );
     }
 
-    public function testSetExclusionTypeForQueryParamsThrowsExceptionIfInvalidValueProvided(): void
-    {
-        $this->expectExceptionMessage('ExceptionInvalidExclusionType');
-        API::getInstance()->setExclusionTypeForQueryParams('bad_value');
-    }
-
-    public function testSetExclusionTypeForQueryParamsSetsTypeCorrectly(): void
-    {
-        API::getInstance()->setExclusionTypeForQueryParams('no_exclusions');
-        $this->assertEquals(
-            'no_exclusions',
-            API::getInstance()->getExclusionTypeForQueryParams()
-        );
-    }
-
     public function getExclusionTypesWithUrlParamsAndExpectedResults(): \Generator
     {
         yield 'option exists already in options store' => ['no_exclusions', '', 'no_exclusions'];
         yield 'option doesnt exist and excluded query parameters has data' => [null, 'myapp_name,myapp_email', 'custom_exclusions'];
         yield 'option doesnt exist and excluded query parameters has no data' => [null, '', 'no_exclusions'];
+    }
+
+    public function testSetGlobalQueryParamExclusionThrowsExceptionWhenInvalidExclusionTypeProvided(): void
+    {
+        $this->expectException(Exception::class);
+
+        Api::getInstance()->setGlobalQueryParamExclusion('invalid');
+    }
+
+    public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersPassedWhenNotCustomType(): void
+    {
+        $this->expectException(Exception::class);
+
+        Api::getInstance()->setGlobalQueryParamExclusion(
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS,
+            'exclude_this'
+        );
+    }
+
+    public function testSetGlobalQueryParamExclusionDeletesSavedExclusionsWhenNotCustomType(): void
+    {
+        Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, 'this_is_excluded_legacy');
+
+        Api::getInstance()->setGlobalQueryParamExclusion(
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS
+        );
+
+        $this->assertEmpty(Api::getInstance()->getExcludedQueryParametersGlobal());
+    }
+
+    /**
+     * @dataProvider setGlobalQueryParamExclusionPersistsSettingsSuccessfully
+     */
+    public function testSetGlobalQueryParamExclusionPersistsSettingsSuccessfully(
+        string $exclusionType,
+        ?string $excludedQueryParamsGlobal,
+        string $expectedQueryParamsGlobal,
+        string $expectedExclusionType): void
+    {
+        Api::getInstance()->setGlobalQueryParamExclusion(
+            $exclusionType,
+            $excludedQueryParamsGlobal
+        );
+
+        $this->assertEquals(
+            $expectedQueryParamsGlobal,
+            Api::getInstance()->getExcludedQueryParametersGlobal()
+        );
+        $this->assertEquals(
+            $expectedExclusionType,
+            Api::getInstance()->getExclusionTypeForQueryParams()
+        );
+    }
+
+    public function setGlobalQueryParamExclusionPersistsSettingsSuccessfully(): \Generator
+    {
+        yield 'no exclusions' => ['no_exclusions', null, '', 'no_exclusions'];
+        yield 'common pii exclusions' => [
+            'common_pii_exclusions',
+            null,
+            implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE),
+            'common_pii_exclusions'
+        ];
+        yield 'custom exclusions' => ['custom_exclusions', 'one,two', 'one,two', 'custom_exclusions'];
     }
 
     public function provideContainerConfig()

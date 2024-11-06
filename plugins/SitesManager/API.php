@@ -40,6 +40,7 @@ use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Translation\Translator;
 use Piwik\Url;
 use Piwik\UrlHelper;
+use Piwik\Validators\WhitelistedValue;
 
 /**
  * The SitesManager API gives you full control on Websites in Matomo (create, update and delete), and many methods to retrieve websites based on various attributes.
@@ -1357,17 +1358,43 @@ class API extends \Piwik\Plugin\API
         return true;
     }
 
-    public function setExclusionTypeForQueryParams(string $exclusionTypeForQueryParams): void
+    /**
+     * Sets global query parameter exclusion based on the specified exclusion type.
+     *
+     * @param string $exclusionType The type of query param exclusion, must be of the following:
+     *  - no_exclusions
+     *  - common_pii_exclusions
+     *  - custom_exclusions
+     * @param string|null $queryParamsToExclude (Optional) List of query parameters to exclude when $exclusionType is 'custom'.
+     *                                         Ignored if $exclusionType is not 'custom'.
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public function setGlobalQueryParamExclusion(string $exclusionType, ?string $queryParamsToExclude = null): void
     {
         Piwik::checkUserHasSuperUserAccess();
 
-        if (!in_array($exclusionTypeForQueryParams, SitesManager::URL_PARAM_EXCLUSION_TYPES)) {
+        if (!in_array($exclusionType, SitesManager::URL_PARAM_EXCLUSION_TYPES)) {
             throw new Exception($this->translator->translate('SitesManager_ExceptionInvalidExclusionType'));
         }
 
-        Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionTypeForQueryParams);
+        if ($exclusionType === SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && empty($queryParamsToExclude)) {
+            throw new Exception("Custom exclusion type requires non-empty 'queryParamsToExclude'.");
+        }
 
-        Cache::deleteTrackerCache();
+        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && !empty($queryParamsToExclude)) {
+            throw new Exception("URL params to exclude must only be provided for custom exclusion type");
+        }
+
+        Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
+
+        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS) {
+            Option::delete(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+            return;
+        }
+
+        $excludedQueryParameters = $this->checkAndReturnCommaSeparatedStringList($queryParamsToExclude);
+        Option::set(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $excludedQueryParameters);
     }
 
     /**
