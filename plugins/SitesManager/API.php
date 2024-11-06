@@ -1374,9 +1374,9 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSuperUserAccess();
 
-        if (!in_array($exclusionType, SitesManager::URL_PARAM_EXCLUSION_TYPES)) {
-            throw new Exception($this->translator->translate('SitesManager_ExceptionInvalidExclusionType'));
-        }
+
+        $whiteListValidator = new WhitelistedValue(SitesManager::URL_PARAM_EXCLUSION_TYPES);
+        $whiteListValidator->validate($exclusionType);
 
         if ($exclusionType === SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && empty($queryParamsToExclude)) {
             throw new Exception("Custom exclusion type requires non-empty 'queryParamsToExclude'.");
