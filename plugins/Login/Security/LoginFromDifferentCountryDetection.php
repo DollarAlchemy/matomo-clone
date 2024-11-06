@@ -29,11 +29,6 @@ class LoginFromDifferentCountryDetection
      */
     private $usersModel;
 
-    /**
-     * @var array|null
-     */
-    private $location = null;
-
     public function __construct(Model $model, UsersModel $usersModel)
     {
         $this->model = $model;
