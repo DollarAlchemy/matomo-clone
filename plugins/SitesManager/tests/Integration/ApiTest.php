@@ -1709,8 +1709,8 @@ class ApiTest extends IntegrationTestCase
         string $exclusionType,
         ?string $excludedQueryParamsGlobal,
         string $expectedQueryParamsGlobal,
-        string $expectedExclusionType): void
-    {
+        string $expectedExclusionType
+    ): void {
         Api::getInstance()->setGlobalQueryParamExclusion(
             $exclusionType,
             $excludedQueryParamsGlobal
