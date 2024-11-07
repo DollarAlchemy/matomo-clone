@@ -1125,7 +1125,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return string Comma separated list of URL parameters
      */
-    public function getExcludedQueryParametersGlobal()
+    public function getExcludedQueryParametersGlobal(): string
     {
         Piwik::checkUserHasSomeViewAccess();
 
