@@ -1277,6 +1277,7 @@ class API extends \Piwik\Plugin\API
      * Will also apply to websites created in the future.
      *
      * @param string $excludedQueryParameters Comma separated list of URL query parameters to exclude from URLs
+     * @deprecated Use self::setGlobalQueryParamExclusion() instead.
      * @return bool
      */
     public function setGlobalExcludedQueryParameters($excludedQueryParameters)
@@ -1372,7 +1373,6 @@ class API extends \Piwik\Plugin\API
     public function setGlobalQueryParamExclusion(string $exclusionType, ?string $queryParamsToExclude = null): void
     {
         Piwik::checkUserHasSuperUserAccess();
-
 
         $whiteListValidator = new WhitelistedValue(SitesManager::URL_PARAM_EXCLUSION_TYPES);
         $whiteListValidator->validate($exclusionType);
