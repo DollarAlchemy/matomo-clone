@@ -1621,11 +1621,7 @@ class ApiTest extends IntegrationTestCase
      */
     public function testGetExcludedQueryParametersGlobalShowsCorrectParamsDependingOnExclusionType($exclusionType, $expected): void
     {
-        $config = Config::getInstance();
-        $sitesManager = $config->SitesManager;
-        $sitesManager['CommonPIIParams'] = ['common_one','common_two','common_three'];
-        $config->SitesManager = $sitesManager;
-        $config->forceSave();
+        $this->setCommonPIIParamsInConfig(['common_one','common_two','common_three']);
 
         Option::set(API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
         Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, 'one,two');
@@ -1718,6 +1714,7 @@ class ApiTest extends IntegrationTestCase
         string $expectedQueryParamsGlobal,
         string $expectedExclusionType
     ): void {
+        $this->setCommonPIIParamsInConfig(['common_one','common_two','common_three']);
         Api::getInstance()->setGlobalQueryParamExclusion(
             $exclusionType,
             $excludedQueryParamsGlobal
@@ -1739,10 +1736,19 @@ class ApiTest extends IntegrationTestCase
         yield 'common pii exclusions' => [
             'common_pii_exclusions',
             null,
-            implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE),
+            implode(',', ['common_one','common_two','common_three']),
             'common_pii_exclusions'
         ];
         yield 'custom exclusions' => ['custom_exclusions', 'one,two', 'one,two', 'custom_exclusions'];
+    }
+
+    private function setCommonPIIParamsInConfig(array $urlParams): void
+    {
+        $config = Config::getInstance();
+        $sitesManager = $config->SitesManager;
+        $sitesManager['CommonPIIParams'] = $urlParams;
+        $config->SitesManager = $sitesManager;
+        $config->forceSave();
     }
 
     public function provideContainerConfig()
