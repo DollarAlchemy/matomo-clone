@@ -1134,8 +1134,6 @@ class API extends \Piwik\Plugin\API
                 return '';
             case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS:
                 return implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE);
-            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS:
-                return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
             default:
                 return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
         }
