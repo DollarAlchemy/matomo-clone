@@ -21,7 +21,7 @@
     {% include "@CoreHome/_topScreen.twig" %}
 
     <div class="top_controls">
-        {% if hideTopControls is not defined or not hideTopControls %}
+        {% if hideQuickAccess is not defined or not hideQuickAccess %}
             <div vue-entry="CoreHome.QuickAccess" class="piwikTopControl borderedControl"></div>
         {% endif %}
 
