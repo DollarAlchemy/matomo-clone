@@ -20,8 +20,8 @@
     {% include "@CoreHome/_warningInvalidHost.twig" %}
     {% include "@CoreHome/_topScreen.twig" %}
 
-    <div class="top_controls{% if allWebsitesDashboard|default(false) %} top_controls--awd{% endif %}">
-        {% if allWebsitesDashboard is not defined or not allWebsitesDashboard %}
+    <div class="top_controls">
+        {% if hideTopControls is not defined or not hideTopControls %}
             <div vue-entry="CoreHome.QuickAccess" class="piwikTopControl borderedControl"></div>
         {% endif %}
 

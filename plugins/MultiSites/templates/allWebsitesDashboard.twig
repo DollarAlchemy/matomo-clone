@@ -1,7 +1,9 @@
 {% extends isWidgetized ? 'empty.twig' : 'dashboard.twig' %}
 
+{% set bodyId = 'awd' %}
+
 {% block root %}
-    {% set allWebsitesDashboard = true %}
+    {% set hideTopControls = true %}
     {{ parent() }}
 {% endblock %}
 
