@@ -14,6 +14,7 @@ use Exception;
 use Matomo\Network\IPUtils;
 use Piwik\Access;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\Model as CoreModel;
 use Piwik\Date;
@@ -1133,7 +1134,7 @@ class API extends \Piwik\Plugin\API
             case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS:
                 return '';
             case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS:
-                return implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE);
+                return implode(',', Config::getInstance()->SitesManager['CommonPIIParams']);
             default:
                 return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
         }

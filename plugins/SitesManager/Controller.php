@@ -12,6 +12,7 @@ namespace Piwik\Plugins\SitesManager;
 use Exception;
 use Piwik\API\ResponseBuilder;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
@@ -57,7 +58,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         return $this->renderTemplate(
             'globalSettings',
             [
-                'commonSensitiveQueryParams' => SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE
+                'commonSensitiveQueryParams' => Config::getInstance()->SitesManager['CommonPIIParams']
             ]
         );
     }
