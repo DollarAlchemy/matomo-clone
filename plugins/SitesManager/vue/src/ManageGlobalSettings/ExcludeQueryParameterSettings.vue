@@ -76,7 +76,7 @@
           type="button"
           @click="addCommonPIIQueryParams()"
           class="btn"
-          value="Add sensible exclusions to my custom list"
+          :value="translate('SitesManager_AddSensibleExclusionsToMyCustomListButtonText')"
         />
       </div>
   </div>
