@@ -38,7 +38,7 @@ class SitesManager extends \Piwik\Plugin
     public const KEEP_URL_FRAGMENT_USE_DEFAULT = 0;
     public const KEEP_URL_FRAGMENT_YES = 1;
     public const KEEP_URL_FRAGMENT_NO = 2;
-    
+
     public const URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS = 'no_exclusions';
     public const URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS = 'common_pii_exclusions';
     public const URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS = 'custom_exclusions';
@@ -495,6 +495,7 @@ class SitesManager extends \Piwik\Plugin
         $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCommonPIIExclusions';
         $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCustomExclusions';
         $translationKeys[] = 'SitesManager_ExclusionViewListLink';
+        $translationKeys[] = 'SitesManager_AddSensibleExclusionsToMyCustomListButtonText';
     }
 
     public static function renderTrackingCodeEmail(int $idSite)
