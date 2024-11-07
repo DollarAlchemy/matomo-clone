@@ -38,27 +38,7 @@ class SitesManager extends \Piwik\Plugin
     public const KEEP_URL_FRAGMENT_USE_DEFAULT = 0;
     public const KEEP_URL_FRAGMENT_YES = 1;
     public const KEEP_URL_FRAGMENT_NO = 2;
-
-    public const COMMON_URL_PARAMS_TO_EXCLUDE =  ['creditcardnumber', 'off', 'kreditkarte', 'debitcard', 'kreditkort',
-        'kredietkaart', ' kartakredytowa', 'cvv', 'cc', 'ccc', 'cccsc', 'cccvc', 'ccexpiry', 'ccexpyear', 'ccexpmonth',
-        'cccvv', 'cctype', 'cvc', 'exp', 'ccname', 'cardnumber', 'ccnumber', 'username', 'creditcard', 'name',
-        'fullname', 'familyname', 'firstname', 'vorname', 'nachname', 'lastname', 'nickname', 'surname', 'login',
-        'formlogin', 'konto', 'user', 'website', 'domain', 'gender', 'company', 'firma', 'geschlecht', 'email',
-        'emailaddress', 'emailadresse', 'mail', 'epos', 'ebost', 'epost', 'eposta', 'authpw', 'token_auth',
-        'tokenauth', 'token', 'pin', 'ibanaccountnum', 'ibanaccountnumber', 'account', 'accountnum', 'auth', 'age',
-        'alter', 'tel', 'city', 'cell', 'cellphone', 'bic', 'iban', 'swift', 'kontonummer', 'konto', 'kontonr',
-        'phone', 'mobile', 'mobiili', 'mobilne', 'handynummer', 'téléphone', 'telefono', 'ssn', 'socialsecuritynumber',
-        'socialsec', 'socsec', 'address', 'addressline1', 'addressline2','billingaddress', 'billingaddress1',
-        'billingaddress2','shippingaddress', 'shippingaddress1', 'shippingaddress2', 'vat', 'vatnumber', 'gst',
-        'gstnumber', 'tax', 'taxnumber', 'steuernummer', 'adresse', 'indirizzo', 'adres', 'dirección', 'osoite',
-        'address1', 'address2', 'address3', 'street', 'strasse', 'rue', 'via', 'ulica', 'calle', 'sokak', 'zip',
-        'zipcode', 'plz', 'postleitzahl', 'postalcode', 'postcode', 'dateofbirth', 'dob', 'telephone', 'telefon',
-        'telefonnr', 'telefonnummer', 'password', 'passwort', 'kennwort', 'wachtwoord', 'contraseña', 'passord',
-        'hasło', 'heslo', 'wagwoord', 'parole', 'contrasenya', 'heslo', 'clientid', 'identifier', 'id',
-        'consumersecret', 'webhooksecret', 'consumerkey', 'keyconsumersecret', 'keyconsumerkey', 'clientsecret',
-        'secret', 'secretq', 'secretquestion', 'privatekey', 'publickey', 'pw', 'pwd', 'pwrd', 'pword', 'paword',
-        'pasword', 'paswort', 'pass'];
-
+    
     public const URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS = 'no_exclusions';
     public const URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS = 'common_pii_exclusions';
     public const URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS = 'custom_exclusions';

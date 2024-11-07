@@ -9,6 +9,7 @@
 
 namespace Piwik\Plugins\SitesManager\tests\Integration;
 
+use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Option;
 use Piwik\Piwik;
@@ -1620,6 +1621,12 @@ class ApiTest extends IntegrationTestCase
      */
     public function testGetExcludedQueryParametersGlobalShowsCorrectParamsDependingOnExclusionType($exclusionType, $expected): void
     {
+        $config = Config::getInstance();
+        $sitesManager = $config->SitesManager;
+        $sitesManager['CommonPIIParams'] = ['common_one','common_two','common_three'];
+        $config->SitesManager = $sitesManager;
+        $config->forceSave();
+
         Option::set(API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
         Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, 'one,two');
 
@@ -1632,7 +1639,7 @@ class ApiTest extends IntegrationTestCase
     public function getExclusionTypesAndExpectedResults(): \Generator
     {
         yield 'no exclusions' => ['no_exclusions', ''];
-        yield 'common PII exclusions' => ['common_pii_exclusions', implode(',', SitesManager::COMMON_URL_PARAMS_TO_EXCLUDE)];
+        yield 'common PII exclusions' => ['common_pii_exclusions', implode(',', ['common_one','common_two','common_three'])];
         yield 'custom exclusions' => ['custom_exclusions', 'one,two'];
         yield 'empty exclusion type' => ['', 'one,two'];
         yield 'false exclusion type' => [false, 'one,two'];
