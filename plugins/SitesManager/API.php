@@ -1365,7 +1365,7 @@ class API extends \Piwik\Plugin\API
      *  - no_exclusions
      *  - common_pii_exclusions
      *  - custom_exclusions
-     * @param string|null $queryParamsToExclude (Optional) List of query parameters to exclude when $exclusionType is 'custom'.
+     * @param string|null $queryParamsToExclude (Optional) Comma separated list of query parameters to exclude when $exclusionType is 'custom'.
      *                                         Ignored if $exclusionType is not 'custom'.
      * @return void
      * @throws Exception
