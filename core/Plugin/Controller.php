@@ -445,7 +445,7 @@ abstract class Controller
         $period = Piwik::getPeriod();
         $date = Piwik::getDate();
         $meta = \Piwik\Plugins\API\API::getInstance()->getReportMetadata($idSite, $period, $date);
-    
+
         $columns = array_merge($columnsToDisplay ? $columnsToDisplay : array(), $selectableColumns);
         $translations = array_combine($columns, $columns);
         foreach ($meta as $reportMeta) {
@@ -457,29 +457,29 @@ abstract class Controller
                 }
             }
         }
-    
+
         // initialize the graph and load the data
         $view = $this->getLastUnitGraph($currentModuleName, $currentControllerAction, $apiMethod);
-    
+
         if ($columnsToDisplay !== false) {
             $view->config->columns_to_display = $columnsToDisplay;
         }
-    
+
         if (property_exists($view->config, 'selectable_columns')) {
             $view->config->selectable_columns = array_merge($view->config->selectable_columns ?: array(), $selectableColumns);
         }
-    
+
         $view->config->translations += $translations;
     
         // Add fallback for missing documentation
         if (empty($reportDocumentation)) {
-            $reportDocumentation = "No documentation available for this report.";
+            $reportDocumentation = Piwik::translate('General_NoDocumentationAvailable');
         }
     
         $view->config->documentation = $reportDocumentation;
     
         return $view;
-    }    
+    }
 
     /**
      * Returns the array of new processed parameters once the parameters are applied.
