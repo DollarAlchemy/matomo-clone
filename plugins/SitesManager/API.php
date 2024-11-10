@@ -1378,11 +1378,11 @@ class API extends \Piwik\Plugin\API
         $whiteListValidator->validate($exclusionType);
 
         if ($exclusionType === SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && empty($queryParamsToExclude)) {
-            throw new Exception($this->translator->translate('ExceptionEmptyQueryParamsForCustomType'));
+            throw new Exception($this->translator->translate('SitesManager_ExceptionEmptyQueryParamsForCustomType'));
         }
 
         if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && !empty($queryParamsToExclude)) {
-            throw new Exception($this->translator->translate('ExceptionNonEmptyQueryParamsForNonCustomType'));
+            throw new Exception($this->translator->translate('SitesManager_ExceptionNonEmptyQueryParamsForNonCustomType'));
         }
 
         Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
