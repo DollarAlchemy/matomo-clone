@@ -247,7 +247,10 @@ export default defineComponent({
     SaveButton,
   },
   props: {
-    commonSensitiveQueryParams: [],
+    commonSensitiveQueryParams: {
+      type: Array as PropType<string[]>,
+      default: () => [],
+    },
   },
   data(): GlobalSettingsState {
     const currentDate = new Date();
