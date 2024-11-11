@@ -470,14 +470,14 @@ abstract class Controller
         }
 
         $view->config->translations += $translations;
-    
+
         // Add fallback for missing documentation
         if (empty($reportDocumentation)) {
             $reportDocumentation = Piwik::translate('General_NoDocumentationAvailable');
         }
-    
+
         $view->config->documentation = $reportDocumentation;
-    
+
         return $view;
     }
 
