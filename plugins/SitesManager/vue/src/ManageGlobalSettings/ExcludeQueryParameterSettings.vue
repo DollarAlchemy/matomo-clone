@@ -160,6 +160,11 @@ export default defineComponent({
   },
   methods: {
     updateExclusionType(value: string) {
+      if (value !== 'custom_exclusions') {
+        this.localExcludedQueryParametersGlobal = [];
+        this.onInputExcludedQueryParametersGlobal('');
+      }
+
       this.$emit('update:exclusionTypeForQueryParams', value);
     },
     onInputExcludedQueryParametersGlobal(value: string) {

@@ -118,5 +118,10 @@ describe("SitesManager", function () {
     // Add exclusions
     await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
     expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
+
+    // Switch back to other exclusion then back to custom, then should be cleared
+    await page.click('#exclusionTypecommon_pii_exclusions');
+    await page.click('#exclusionTypecustom_exclusions');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom_exclusions');
   });
 });
