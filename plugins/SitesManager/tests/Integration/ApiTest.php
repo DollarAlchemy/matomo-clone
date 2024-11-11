@@ -1742,6 +1742,23 @@ class ApiTest extends IntegrationTestCase
         yield 'custom exclusions' => ['custom_exclusions', 'one,two', 'one,two', 'custom_exclusions'];
     }
 
+    /**
+     * @dataProvider deprecatedSetGlobalExcludedQueryParametersShouldReturnExpectedParameters
+     */
+    public function testDeprecatedSetGlobalExcludedQueryParametersShouldReturnExpectedParameters(string $excludedParameters, string $expectedExclusionType): void
+    {
+        Api::getInstance()->setGlobalExcludedQueryParameters($excludedParameters);
+
+        $this->assertEquals($excludedParameters, Api::getInstance()->getExcludedQueryParametersGlobal());
+        $this->assertEquals($expectedExclusionType, Api::getInstance()->getExclusionTypeForQueryParams());
+    }
+
+    public function deprecatedSetGlobalExcludedQueryParametersShouldReturnExpectedParameters(): \Generator
+    {
+        yield 'non empty list of exclusions' => ['one,two,three', 'custom_exclusions'];
+        yield 'empty list of exclusions' => ['', 'no_exclusions'];
+    }
+
     private function setCommonPIIParamsInConfig(array $urlParams): void
     {
         $config = Config::getInstance();

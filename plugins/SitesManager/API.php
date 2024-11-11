@@ -1282,10 +1282,14 @@ class API extends \Piwik\Plugin\API
      */
     public function setGlobalExcludedQueryParameters($excludedQueryParameters)
     {
-        Piwik::checkUserHasSuperUserAccess();
-        $excludedQueryParameters = $this->checkAndReturnCommaSeparatedStringList($excludedQueryParameters);
-        Option::set(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $excludedQueryParameters);
-        Cache::deleteTrackerCache();
+        if (empty($excludedQueryParameters)) {
+            $this->setGlobalQueryParamExclusion(SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS,);
+            return;
+        }
+        $this->setGlobalQueryParamExclusion(
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS,
+            $excludedQueryParameters
+        );
         return true;
     }
 
@@ -1389,11 +1393,13 @@ class API extends \Piwik\Plugin\API
 
         if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS) {
             Option::delete(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
+            Cache::deleteTrackerCache();
             return;
         }
 
         $excludedQueryParameters = $this->checkAndReturnCommaSeparatedStringList($queryParamsToExclude);
         Option::set(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $excludedQueryParameters);
+        Cache::deleteTrackerCache();
     }
 
     /**
