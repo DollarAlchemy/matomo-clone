@@ -1283,7 +1283,7 @@ class API extends \Piwik\Plugin\API
     public function setGlobalExcludedQueryParameters($excludedQueryParameters)
     {
         if (empty($excludedQueryParameters)) {
-            $this->setGlobalQueryParamExclusion(SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS,);
+            $this->setGlobalQueryParamExclusion(SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS);
             return;
         }
         $this->setGlobalQueryParamExclusion(
