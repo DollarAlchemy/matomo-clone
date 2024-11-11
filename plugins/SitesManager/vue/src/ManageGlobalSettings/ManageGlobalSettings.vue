@@ -205,7 +205,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from 'vue';
+import { defineComponent, PropType, watch } from 'vue';
 import {
   Matomo,
   ContentBlock,
