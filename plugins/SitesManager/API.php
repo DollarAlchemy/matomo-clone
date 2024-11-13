@@ -1378,6 +1378,7 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSuperUserAccess();
 
+        $queryParamsToExclude = $this->checkAndReturnCommaSeparatedStringList($queryParamsToExclude);
         $whiteListValidator = new WhitelistedValue(SitesManager::URL_PARAM_EXCLUSION_TYPES);
         $whiteListValidator->validate($exclusionType);
 
@@ -1397,8 +1398,7 @@ class API extends \Piwik\Plugin\API
             return;
         }
 
-        $excludedQueryParameters = $this->checkAndReturnCommaSeparatedStringList($queryParamsToExclude);
-        Option::set(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $excludedQueryParameters);
+        Option::set(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, $queryParamsToExclude);
         Cache::deleteTrackerCache();
     }
 

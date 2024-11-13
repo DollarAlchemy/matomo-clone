@@ -1674,14 +1674,24 @@ class ApiTest extends IntegrationTestCase
         Api::getInstance()->setGlobalQueryParamExclusion('invalid');
     }
 
-    public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersNotPassedWhenCustomType(): void
+    /**
+     * @dataProvider setGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersNotPassedWhenCustomType
+     */
+    public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersNotPassedWhenCustomType(string $queryParameters): void
     {
-        $this->expectExceptionMessage('ExceptionEmptyQueryParamsForCustomType');
+        $this->expectExceptionMessage('SitesManager_ExceptionEmptyQueryParamsForCustomType');
 
         Api::getInstance()->setGlobalQueryParamExclusion(
             SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS,
-            ''
+            $queryParameters
         );
+    }
+
+    public function setGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersNotPassedWhenCustomType(): \Generator
+    {
+        yield 'blank 0 length string' => [''];
+        yield 'string with just white space' => ['    '];
+        yield 'comma seperated with no values' => [',, ,,,'];
     }
 
     public function testSetGlobalQueryParamExclusionThrowsExceptionWhenQueryParametersPassedWhenNotCustomType(): void
