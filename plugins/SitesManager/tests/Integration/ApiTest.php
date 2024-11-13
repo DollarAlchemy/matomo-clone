@@ -1634,9 +1634,9 @@ class ApiTest extends IntegrationTestCase
 
     public function getExclusionTypesAndExpectedResults(): \Generator
     {
-        yield 'no exclusions' => ['no_exclusions', ''];
-        yield 'common PII exclusions' => ['common_pii_exclusions', implode(',', ['common_one','common_two','common_three'])];
-        yield 'custom exclusions' => ['custom_exclusions', 'one,two'];
+        yield 'common session parameters' => ['common_session_parameters', ''];
+        yield 'matomo recommended PII' => ['matomo_recommended_pii', implode(',', ['common_one','common_two','common_three'])];
+        yield 'custom' => ['custom', 'one,two'];
         yield 'empty exclusion type' => ['', 'one,two'];
         yield 'false exclusion type' => [false, 'one,two'];
     }
@@ -1662,9 +1662,9 @@ class ApiTest extends IntegrationTestCase
 
     public function getExclusionTypesWithUrlParamsAndExpectedResults(): \Generator
     {
-        yield 'option exists already in options store' => ['no_exclusions', '', 'no_exclusions'];
-        yield 'option doesnt exist and excluded query parameters has data' => [null, 'myapp_name,myapp_email', 'custom_exclusions'];
-        yield 'option doesnt exist and excluded query parameters has no data' => [null, '', 'no_exclusions'];
+        yield 'option exists already in options store' => ['common_session_parameters', '', 'common_session_parameters'];
+        yield 'option doesnt exist and excluded query parameters has data' => [null, 'myapp_name,myapp_email', 'custom'];
+        yield 'option doesnt exist and excluded query parameters has no data' => [null, '', 'common_session_parameters'];
     }
 
     public function testSetGlobalQueryParamExclusionThrowsExceptionWhenInvalidExclusionTypeProvided(): void
@@ -1682,7 +1682,7 @@ class ApiTest extends IntegrationTestCase
         $this->expectExceptionMessage('SitesManager_ExceptionEmptyQueryParamsForCustomType');
 
         Api::getInstance()->setGlobalQueryParamExclusion(
-            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS,
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM,
             $queryParameters
         );
     }
@@ -1699,7 +1699,7 @@ class ApiTest extends IntegrationTestCase
         $this->expectExceptionMessage('ExceptionNonEmptyQueryParamsForNonCustomType');
 
         Api::getInstance()->setGlobalQueryParamExclusion(
-            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS,
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII,
             'exclude_this'
         );
     }
@@ -1709,7 +1709,7 @@ class ApiTest extends IntegrationTestCase
         Option::set(API::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL, 'this_is_excluded_legacy');
 
         Api::getInstance()->setGlobalQueryParamExclusion(
-            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS
         );
 
         $this->assertEmpty(Api::getInstance()->getExcludedQueryParametersGlobal());
@@ -1742,14 +1742,14 @@ class ApiTest extends IntegrationTestCase
 
     public function setGlobalQueryParamExclusionPersistsSettingsSuccessfully(): \Generator
     {
-        yield 'no exclusions' => ['no_exclusions', null, '', 'no_exclusions'];
-        yield 'common pii exclusions' => [
-            'common_pii_exclusions',
+        yield 'common session parameters' => ['common_session_parameters', null, '', 'common_session_parameters'];
+        yield 'matomo recommended pii' => [
+            'matomo_recommended_pii',
             null,
             implode(',', ['common_one','common_two','common_three']),
-            'common_pii_exclusions'
+            'matomo_recommended_pii'
         ];
-        yield 'custom exclusions' => ['custom_exclusions', 'one,two', 'one,two', 'custom_exclusions'];
+        yield 'custom' => ['custom', 'one,two', 'one,two', 'custom'];
     }
 
     /**
@@ -1765,8 +1765,8 @@ class ApiTest extends IntegrationTestCase
 
     public function deprecatedSetGlobalExcludedQueryParametersShouldReturnExpectedParameters(): \Generator
     {
-        yield 'non empty list of exclusions' => ['one,two,three', 'custom_exclusions'];
-        yield 'empty list of exclusions' => ['', 'no_exclusions'];
+        yield 'non empty list of exclusions' => ['one,two,three', 'custom'];
+        yield 'empty list of exclusions' => ['', 'common_session_parameters'];
     }
 
     private function setCommonPIIParamsInConfig(array $urlParams): void

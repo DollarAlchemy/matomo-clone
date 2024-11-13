@@ -1131,9 +1131,9 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeViewAccess();
 
         switch ($this->getExclusionTypeForQueryParams()) {
-            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS:
+            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS:
                 return '';
-            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_PII_EXCLUSIONS:
+            case SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII:
                 return implode(',', Config::getInstance()->SitesManager['CommonPIIParams']);
             default:
                 return Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
@@ -1283,11 +1283,11 @@ class API extends \Piwik\Plugin\API
     public function setGlobalExcludedQueryParameters($excludedQueryParameters)
     {
         if (empty($excludedQueryParameters)) {
-            $this->setGlobalQueryParamExclusion(SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS);
+            $this->setGlobalQueryParamExclusion(SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS);
             return true;
         }
         $this->setGlobalQueryParamExclusion(
-            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS,
+            SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM,
             $excludedQueryParameters
         );
         return true;
@@ -1366,9 +1366,9 @@ class API extends \Piwik\Plugin\API
      * Sets global query parameter exclusion based on the specified exclusion type.
      *
      * @param string $exclusionType The type of query param exclusion, must be of the following:
-     *  - no_exclusions
-     *  - common_pii_exclusions
-     *  - custom_exclusions
+     *  - common_session_parameters
+     *  - matomo_recommended_pii
+     *  - custom
      * @param string|null $queryParamsToExclude (Optional) Comma separated list of query parameters to exclude when $exclusionType is 'custom'.
      *                                         Ignored if $exclusionType is not 'custom'.
      * @return void
@@ -1382,17 +1382,17 @@ class API extends \Piwik\Plugin\API
         $whiteListValidator = new WhitelistedValue(SitesManager::URL_PARAM_EXCLUSION_TYPES);
         $whiteListValidator->validate($exclusionType);
 
-        if ($exclusionType === SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && empty($queryParamsToExclude)) {
+        if ($exclusionType === SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM && empty($queryParamsToExclude)) {
             throw new Exception($this->translator->translate('SitesManager_ExceptionEmptyQueryParamsForCustomType'));
         }
 
-        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS && !empty($queryParamsToExclude)) {
+        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM && !empty($queryParamsToExclude)) {
             throw new Exception($this->translator->translate('SitesManager_ExceptionNonEmptyQueryParamsForNonCustomType'));
         }
 
         Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
 
-        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS) {
+        if ($exclusionType !== SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM) {
             Option::delete(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
             Cache::deleteTrackerCache();
             return;
@@ -1421,9 +1421,9 @@ class API extends \Piwik\Plugin\API
         $excludedQueryParamsGlobal = Option::get(self::OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL);
 
         if (empty($excludedQueryParamsGlobal)) {
-            return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_NO_EXCLUSIONS;
+            return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS;
         }
-        return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM_EXCLUSIONS;
+        return SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM;
     }
 
     /**

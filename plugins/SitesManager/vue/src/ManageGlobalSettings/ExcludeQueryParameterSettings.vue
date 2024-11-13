@@ -10,22 +10,15 @@
       <div id="excludedQueryParametersGlobalHelp" class="inline-help-node">
         <div>
           {{ translate('SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/') }}
-
-          <br/><br/>
-
-          {{ translate(
-          'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters',
-          'phpsessid, sessionid, ...',
-        ) }}
         </div>
       </div>
 
       <div id="excludedQueryParametersGlobalExclusionTypeHelp" class="inline-help-node">
-        <div v-show="localExclusionTypeForQueryParams === 'no_exclusions'">
-          {{ translate('SitesManager_ExclusionTypeDescriptionNoExclusions') }}
+        <div v-show="localExclusionTypeForQueryParams === 'common_session_parameters'">
+          {{ translate('SitesManager_ExclusionTypeDescriptionCommonSessionParameters') }}
         </div>
-        <div v-show="localExclusionTypeForQueryParams === 'common_pii_exclusions'">
-          <p>{{ translate('SitesManager_ExclusionTypeDescriptionCommonPIIExclusions') }}</p>
+        <div v-show="localExclusionTypeForQueryParams === 'matomo_recommended_pii'">
+          <p>{{ translate('SitesManager_ExclusionTypeDescriptionMatomoRecommendedPII') }}</p>
           <div>
             <a href="javascript:;"
                v-if="!showListOfCommonExclusions"
@@ -43,9 +36,19 @@
           <div v-if="showListOfCommonExclusions">
             {{ commonSensitiveQueryParams.join(', ') }}
           </div>
+          <br/><br/>
+          {{ translate(
+            'SitesManager_MatomoWillAutomaticallyExcludeCommonSessionParametersInAddition',
+            'phpsessid, sessionid, ...',
+          ) }}
         </div>
-        <div v-show="localExclusionTypeForQueryParams === 'custom_exclusions'">
-          {{ translate('SitesManager_ExclusionTypeDescriptionCustomExclusions') }}
+        <div v-show="localExclusionTypeForQueryParams === 'custom'">
+          {{ translate('SitesManager_ExclusionTypeDescriptionCustom') }}
+          <br/><br/>
+          {{ translate(
+            'SitesManager_MatomoWillAutomaticallyExcludeCommonSessionParametersInAddition',
+            'phpsessid, sessionid, ...',
+          ) }}
         </div>
       </div>
 
@@ -60,7 +63,7 @@
         />
       </div>
 
-      <div v-show="localExclusionTypeForQueryParams === 'custom_exclusions'">
+      <div v-show="localExclusionTypeForQueryParams === 'custom'">
         <Field
           uicontrol="textarea"
           name="excludedQueryParametersGlobal"
@@ -91,7 +94,7 @@ import { Field } from 'CorePluginsAdmin';
 
 interface ExclusionTypeOption {
   value: string;
-  key: 'no_exclusions' | 'common_pii_exclusions' | 'custom_exclusions';
+  key: 'common_session_parameters' | 'matomo_recommended_pii' | 'custom';
 }
 
 interface ExcludeQueryParameterSettingsState {
@@ -108,7 +111,7 @@ export default defineComponent({
   props: {
     exclusionTypeForQueryParams: {
       type: String,
-      default: 'no_exclusions',
+      default: 'common_session_parameters',
     },
     excludedQueryParametersGlobal: {
       type: Array as PropType<string[]>,
@@ -125,16 +128,16 @@ export default defineComponent({
       localExcludedQueryParametersGlobal: this.excludedQueryParametersGlobal,
       exclusionTypeOptions: [
         {
-          value: translate('SitesManager_ExclusionTypeOptionNoExclusions'),
-          key: 'no_exclusions',
+          value: translate('SitesManager_ExclusionTypeOptionCommonSessionParameters'),
+          key: 'common_session_parameters',
         },
         {
-          value: translate('SitesManager_ExclusionTypeOptionCommonPIIExclusions'),
-          key: 'common_pii_exclusions',
+          value: translate('SitesManager_ExclusionTypeOptionMatomoRecommendedPII'),
+          key: 'matomo_recommended_pii',
         },
         {
-          value: translate('SitesManager_ExclusionTypeOptionCustomExclusions'),
-          key: 'custom_exclusions',
+          value: translate('SitesManager_ExclusionTypeOptionCustom'),
+          key: 'custom',
         },
       ],
       showListOfCommonExclusions: false,
@@ -160,7 +163,7 @@ export default defineComponent({
   },
   methods: {
     updateExclusionType(value: string) {
-      if (value !== 'custom_exclusions') {
+      if (value !== 'custom') {
         this.localExcludedQueryParametersGlobal = [];
         this.onInputExcludedQueryParametersGlobal('');
       }

@@ -108,20 +108,20 @@ describe("SitesManager", function () {
     expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_default');
 
     // Change to sensible exclusions
-    await page.click('#exclusionTypecommon_pii_exclusions');
+    await page.click('#exclusionTypematomo_recommended_pii');
     expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_common_exclusions');
 
     // Change to custom exclusions
-    await page.click('#exclusionTypecustom_exclusions');
-    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom_exclusions');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
 
     // Add exclusions
     await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
     expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
 
     // Switch back to other exclusion then back to custom, then should be cleared
-    await page.click('#exclusionTypecommon_pii_exclusions');
-    await page.click('#exclusionTypecustom_exclusions');
-    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom_exclusions');
+    await page.click('#exclusionTypematomo_recommended_pii');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
   });
 });
