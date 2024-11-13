@@ -81,10 +81,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $globalSettings['excludedReferrersGlobal'] = API::getInstance()->getExcludedReferrersGlobal();
         $globalSettings['exclusionTypeForQueryParams'] = API::getInstance()->getExclusionTypeForQueryParams();
 
-        if ($globalSettings['exclusionTypeForQueryParams'] !== 'custom_exclusions') {
-            $globalSettings['excludedQueryParametersGlobal'] = '';
-        }
-
         return $response->getResponse($globalSettings);
     }
 
