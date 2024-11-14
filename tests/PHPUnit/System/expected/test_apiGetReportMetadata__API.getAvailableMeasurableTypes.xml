@@ -80,11 +80,11 @@ https://www.example.org/</placeholder>
 						<uiControlAttributes>
 							<cols>20</cols>
 							<rows>4</rows>
-							<placeholder>127.0.0.1</placeholder>
+							<placeholder>matomo.local</placeholder>
 						</uiControlAttributes>
 						<availableValues />
 						<description />
-						<inlineHelp>Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use CIDR notation eg. 1.2.3.4/24 or you can use wildcards, eg. 1.2.3.* or 1.2.*.*&lt;br /&gt;&lt;br /&gt;Your current IP address is &lt;i&gt;127.0.0.1&lt;/i&gt;</inlineHelp>
+						<inlineHelp>Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use CIDR notation eg. 1.2.3.4/24 or you can use wildcards, eg. 1.2.3.* or 1.2.*.*&lt;br /&gt;&lt;br /&gt;Your current IP address is &lt;i&gt;matomo.local&lt;/i&gt;</inlineHelp>
 						<introduction />
 						<condition />
 						<fullWidth>0</fullWidth>
@@ -104,7 +104,7 @@ https://www.example.org/</placeholder>
 						</uiControlAttributes>
 						<availableValues />
 						<description />
-						<inlineHelp>Enter the list of URL Query Parameters, one per line, to exclude from the Page URLs reports. Regular expressions such as /^sess.*|.*[dD]ate$/ are supported.&lt;br /&gt;&lt;br /&gt;Matomo will automatically exclude the common session parameters (phpsessid, sessionid, ...).</inlineHelp>
+						<inlineHelp>Enter each URL parameter on a separate line to exclude from tracking and reports. Regular expressions such as /^sess.*|.*[dD]ate$/ are supported.&lt;br /&gt;&lt;br /&gt;Matomo will automatically exclude the common session parameters (phpsessid, sessionid, ...).</inlineHelp>
 						<introduction />
 						<condition />
 						<fullWidth>0</fullWidth>
@@ -385,11 +385,11 @@ https://www.example.org/</placeholder>
 						<uiControlAttributes>
 							<cols>20</cols>
 							<rows>4</rows>
-							<placeholder>127.0.0.1</placeholder>
+							<placeholder>matomo.local</placeholder>
 						</uiControlAttributes>
 						<availableValues />
 						<description />
-						<inlineHelp>Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use CIDR notation eg. 1.2.3.4/24 or you can use wildcards, eg. 1.2.3.* or 1.2.*.*&lt;br /&gt;&lt;br /&gt;Your current IP address is &lt;i&gt;127.0.0.1&lt;/i&gt;</inlineHelp>
+						<inlineHelp>Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use CIDR notation eg. 1.2.3.4/24 or you can use wildcards, eg. 1.2.3.* or 1.2.*.*&lt;br /&gt;&lt;br /&gt;Your current IP address is &lt;i&gt;matomo.local&lt;/i&gt;</inlineHelp>
 						<introduction />
 						<condition />
 						<fullWidth>0</fullWidth>
@@ -409,7 +409,7 @@ https://www.example.org/</placeholder>
 						</uiControlAttributes>
 						<availableValues />
 						<description />
-						<inlineHelp>Enter the list of URL Query Parameters, one per line, to exclude from the Page URLs reports. Regular expressions such as /^sess.*|.*[dD]ate$/ are supported.&lt;br /&gt;&lt;br /&gt;Matomo will automatically exclude the common session parameters (phpsessid, sessionid, ...).</inlineHelp>
+						<inlineHelp>Enter each URL parameter on a separate line to exclude from tracking and reports. Regular expressions such as /^sess.*|.*[dD]ate$/ are supported.&lt;br /&gt;&lt;br /&gt;Matomo will automatically exclude the common session parameters (phpsessid, sessionid, ...).</inlineHelp>
 						<introduction />
 						<condition />
 						<fullWidth>0</fullWidth>
