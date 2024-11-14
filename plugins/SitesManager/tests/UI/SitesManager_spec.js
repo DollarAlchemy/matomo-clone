@@ -8,10 +8,12 @@
  */
 
 describe("SitesManager", function () {
+    const parentSuite = this;
+
     this.timeout(0);
     this.fixture = "Piwik\\Plugins\\SitesManager\\tests\\Fixtures\\ManySites";
 
-    var url = "?module=SitesManager&action=index&idSite=1&period=day&date=yesterday&showaddsite=false";
+    const url = "?module=SitesManager&action=index&idSite=1&period=day&date=yesterday&showaddsite=false";
 
     async function assertScreenshotEquals(screenshotName, test, selectorToWaitFor = ".enrichedHeadline:contains(Manage Measurables)")
     {
@@ -101,27 +103,41 @@ describe("SitesManager", function () {
         });
     });
 
-    it("the UI should change depending on what exclusion type gets selected", async function() {
-        await page.goto('?module=SitesManager&action=globalSettings');
+    describe('the UI should change depending on what exclusion type gets selected', async function () {
+        this.title = parentSuite.title; // to make sure the screenshot prefix is the same
 
-        // Current state
-        expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_default');
+        async function assertExcludedParametersScreenshot(screenshotName) {
+            await expect(
+              await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')
+            ).to.matchImage(screenshotName);
+        }
 
-        // Change to sensible exclusions
-        await page.click('#exclusionTypematomo_recommended_pii');
-        expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_common_exclusions');
+        it('excludes common session parameters by default', async function () {
+            await page.goto('?module=SitesManager&action=globalSettings');
+            await assertExcludedParametersScreenshot('global_url_param_exclusion_default')
+        });
 
-        // Change to custom exclusions
-        await page.click('#exclusionTypecustom');
-        expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+        it('excludes recommended parameters if chosen', async function () {
+            await page.click('#exclusionTypematomo_recommended_pii');
+            await assertExcludedParametersScreenshot('global_url_param_exclusion_common_exclusions');
+        });
 
-        // Add exclusions
-        await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
-        expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
+        it('excludes a custom list of parameters if chosen', async function () {
+            await page.click('#exclusionTypecustom');
+            await assertExcludedParametersScreenshot('global_url_param_exclusion_custom');
+        });
 
-        // Switch back to other exclusion then back to custom, then should be cleared
-        await page.click('#exclusionTypematomo_recommended_pii');
-        await page.click('#exclusionTypecustom');
-        expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+        it('can add recommended parameters to custom list', async function () {
+            await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
+            await assertExcludedParametersScreenshot('global_url_param_exclusion_add_common');
+        });
+
+        it('resets custom list of parameters when changing type', async function () {
+            await page.click('#exclusionTypematomo_recommended_pii');
+            await page.click('#exclusionTypecustom');
+
+            // screenshot should be identical to first selection of "custom"
+            await assertExcludedParametersScreenshot('global_url_param_exclusion_custom');
+        });
     });
 });
