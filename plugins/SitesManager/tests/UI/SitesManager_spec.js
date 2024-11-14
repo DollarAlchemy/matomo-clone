@@ -124,4 +124,73 @@ describe("SitesManager", function () {
     await page.click('#exclusionTypecustom');
     expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
   });
+
+  it("the UI should change depending on what exclusion type gets selected #2", async function() {
+    await page.goto('?module=SitesManager&action=globalSettings');
+
+    // Change to sensible exclusions
+    await page.click('#exclusionTypematomo_recommended_pii');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_common_exclusions');
+
+    // Change to custom exclusions
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+
+    // Add exclusions
+    await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
+
+    // Switch back to other exclusion then back to custom, then should be cleared
+    await page.click('#exclusionTypematomo_recommended_pii');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+  });
+
+  it("the UI should change depending on what exclusion type gets selected #3", async function() {
+    await page.goto('?module=SitesManager&action=globalSettings');
+
+    // Change to custom exclusions
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+
+    // Add exclusions
+    await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
+
+    // Switch back to other exclusion then back to custom, then should be cleared
+    await page.click('#exclusionTypematomo_recommended_pii');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+  });
+
+  it("the UI should change depending on what exclusion type gets selected #4", async function() {
+    await page.goto('?module=SitesManager&action=globalSettings');
+
+    // Change to custom exclusions
+    await page.click('#exclusionTypecustom');
+
+    // Add exclusions
+    await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_add_common');
+
+    // Switch back to other exclusion then back to custom, then should be cleared
+    await page.click('#exclusionTypematomo_recommended_pii');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+  });
+
+  it("the UI should change depending on what exclusion type gets selected #5", async function() {
+    await page.goto('?module=SitesManager&action=globalSettings');
+
+    // Change to custom exclusions
+    await page.click('#exclusionTypecustom');
+
+    // Add exclusions
+    await page.click('.siteManagerGlobalExcludedUrlParameters input[type=button]');
+
+    // Switch back to other exclusion then back to custom, then should be cleared
+    await page.click('#exclusionTypematomo_recommended_pii');
+    await page.click('#exclusionTypecustom');
+    expect(await page.screenshotSelector('.siteManagerGlobalExcludedUrlParameters')).to.matchImage('global_url_param_exclusion_custom');
+  });
 });
