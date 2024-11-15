@@ -9,23 +9,11 @@ import Matomo from '../Matomo/Matomo';
 
 const { $ } = window;
 
-/**
- *  Number Formatter for formatting numbers, percent and currencies values
- *
- * @type {object}
- */
 class NumberFormatter {
   defaultMinFractionDigits = 0;
 
   defaultMaxFractionDigits = 2;
 
-  /**
-   * Formats the given numeric value with the given pattern
-   *
-   * @param value
-   * @param pattern
-   * @returns {string}
-   */
   private format(
     val: string|number,
     formatPattern: string,
@@ -119,12 +107,6 @@ class NumberFormatter {
     return this.replaceSymbols(result);
   }
 
-  /**
-   * Replaces the placeholders with real symbols
-   *
-   * @param value
-   * @returns {string}
-   */
   private replaceSymbols(value: string): string {
     const replacements = {
       '.': Matomo.numbers.symbolDecimal,
@@ -155,12 +137,23 @@ class NumberFormatter {
     return newValue;
   }
 
-  private valOrDefault(def: number, val?: number): number {
+  private valOrDefault(val: number|undefined, def: number): number {
     if (typeof val === 'undefined') {
       return def;
     }
 
     return val;
+  }
+
+  public parseFormattedNumber(value: string): number {
+    const isNegative = value.indexOf(Matomo.numbers.symbolMinus) > -1 || value.startsWith('-');
+    const numberParts = value.split(Matomo.numbers.symbolDecimal);
+
+    numberParts.forEach((val, index) => {
+      numberParts[index] = val.replace(/[^0-9]/g, '');
+    });
+
+    return (isNegative ? -1 : 1) * parseFloat(numberParts.join('.'));
   }
 
   public formatNumber(
@@ -171,8 +164,8 @@ class NumberFormatter {
     return this.format(
       value,
       Matomo.numbers.patternNumber,
-      this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits),
-      this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits),
+      this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits),
+      this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits),
     );
   }
 
@@ -184,8 +177,8 @@ class NumberFormatter {
     return this.format(
       value,
       Matomo.numbers.patternPercent,
-      this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits),
-      this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits),
+      this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits),
+      this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits),
     );
   }
 
@@ -198,8 +191,8 @@ class NumberFormatter {
     const formatted = this.format(
       value,
       Matomo.numbers.patternCurrency,
-      this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits),
-      this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits),
+      this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits),
+      this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits),
     );
     return formatted.replace('¤', currency);
   }

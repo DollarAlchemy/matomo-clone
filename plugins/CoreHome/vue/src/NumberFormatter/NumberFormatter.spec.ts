@@ -250,4 +250,32 @@ describe('CoreHome/NumberFormatter', () => {
     })
   });
 
+  const formattedNumberTestData: Array<Array<any>> = [
+    ['en', '+100%', 100],
+    ['en', '-75%', -75],
+    ['en', '12,245.66', 12245.66],
+    ['en', '-0.555', -0.555],
+    ['ar', '؜+51٬239٫56٪؜', 51239.56],
+    ['be', '+51 239,56 %', 51239.56],
+    ['de', '+51.239,56 %', 51239.56 ],
+    ['de', '-239,56 $%', -239.56 ],
+    ['he', '‎+152,551,239.56%', 152551239.56],
+    ['he', '‎-152,551,239.56', -152551239.56],
+    ['hi', '+15,25,51,240%', 152551240],
+    ['lt', '−152 551 240 %', -152551240],
+  ];
+
+  formattedNumberTestData.forEach((testdata) => {
+    const [ lang, input, expected ] = testdata;
+
+    it(`should correctly parse formatted number with (${lang}, ${input})`, () => {
+
+      window.piwik.numbers = formats[lang];
+
+      const result = NumberFormatter.parseFormattedNumber(input as string);
+
+      expect(result).toEqual(expected);
+    })
+  });
+
 });

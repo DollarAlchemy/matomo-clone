@@ -210,7 +210,7 @@ class Dashboard
         $request['serialize'] = 0;
         $request['expanded'] = 0;
         $request['totals'] = 0;
-        $request['format_metrics'] = 1;
+        $request['format_metrics'] = \Piwik\Request::fromRequest()->getStringParameter('format_metrics', '1');
         $request['disable_generic_filters'] = 1;
 
         $responseBuilder = new ResponseBuilder('json', $request);
@@ -313,17 +313,6 @@ class Dashboard
         $filterLimit  = $request['filter_limit'];
         unset($request['filter_offset']);
         unset($request['filter_limit']);
-
-        // filter_sort_column does not work correctly is a bug in MultiSites.getAll
-        $filterSortColumnMapping = [
-            'nb_pageviews' => 'Actions_nb_pageviews',
-            'hits' => 'Actions_hits',
-            'revenue' => 'Goal_revenue',
-        ];
-
-        if (!empty($request['filter_sort_column']) && array_key_exists($request['filter_sort_column'], $filterSortColumnMapping)) {
-            $request['filter_sort_column'] = $filterSortColumnMapping[$request['filter_sort_column']];
-        }
 
         // make sure no limit filter is applied, we will do this manually
         $table->disableFilter('Limit');

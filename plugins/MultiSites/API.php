@@ -317,7 +317,6 @@ class API extends \Piwik\Plugin\API
             $pastData->filter('ReplaceColumnNames', array($columnNameRewrites));
             $this->populateLabel($pastData); // labels are needed to calculate evolution
             $this->calculateEvolutionPercentages($dataTable, $pastData, $apiMetrics);
-            $this->setPastTotalVisitsMetadata($dataTable, $pastData);
             $this->setPreviousMetricsTotalsMetadata($dataTable, $pastData, $totalMetrics);
 
             if ($dataTable instanceof DataTable) {
@@ -554,7 +553,7 @@ class API extends \Piwik\Plugin\API
     private function setPreviousMetricsTotalsMetadata($dataTable, $pastData, $apiMetrics)
     {
         if ($dataTable instanceof DataTable\Map) {
-            $currentDataTables = $pastData->getDataTables();
+            $currentDataTables = $dataTable->getDataTables();
             $pastDataTables = $pastData->getDataTables();
             $currentLabels = array_keys($currentDataTables);
             $pastLabels = array_keys($pastDataTables);
@@ -586,29 +585,6 @@ class API extends \Piwik\Plugin\API
             }
 
             $dataTable->setMetadataValues($totals);
-        }
-    }
-
-    /**
-     * Sets the number of total visits in the pastTable on the dataTable as metadata.
-     *
-     * @param DataTable $dataTable
-     * @param DataTable $pastTable
-     */
-    private function setPastTotalVisitsMetadata($dataTable, $pastTable)
-    {
-        if ($pastTable instanceof DataTable) {
-            $total  = 0;
-            $metric = 'nb_visits';
-
-            $rows = $pastTable->getRows();
-            $rows = $this->filterRowsForTotalsCalculation($rows);
-
-            foreach ($rows as $row) {
-                $total += $row->getColumn($metric);
-            }
-
-            $dataTable->setMetadata(self::getTotalMetadataName($metric . '_lastdate'), $total);
         }
     }
 

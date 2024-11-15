@@ -37,7 +37,7 @@
     <td><span class="value">{{ formatNumber(site.nb_pageviews) }}</span></td>
     <td><span class="value">{{ formatNumber(site.hits) }}</span></td>
     <td v-if="displayRevenue">
-      <span class="value">{{ formatCurrency(site.revenue, site.currencySymbol) }}</span>
+      <span class="value">{{ formatCurrency(site.revenue, site.currencySymbol || '') }}</span>
     </td>
 
     <td :colspan="displaySparkline ? 1 : 2">
@@ -58,6 +58,7 @@
           target="_blank"
           :href="dashboardUrl"
           :title="translate('General_GoTo', translate('Dashboard_DashboardOf', siteLabel))"
+          v-if="!site.isGroup"
       >
         <img
             alt=""

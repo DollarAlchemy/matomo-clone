@@ -2208,11 +2208,6 @@ function NumberFormatter_defineProperty(obj, key, value) { if (key in obj) { Obj
 
 var NumberFormatter_window = window,
     NumberFormatter_$ = NumberFormatter_window.$;
-/**
- *  Number Formatter for formatting numbers, percent and currencies values
- *
- * @type {object}
- */
 
 var NumberFormatter_NumberFormatter = /*#__PURE__*/function () {
   function NumberFormatter() {
@@ -2225,15 +2220,7 @@ var NumberFormatter_NumberFormatter = /*#__PURE__*/function () {
 
   NumberFormatter_createClass(NumberFormatter, [{
     key: "format",
-    value:
-    /**
-     * Formats the given numeric value with the given pattern
-     *
-     * @param value
-     * @param pattern
-     * @returns {string}
-     */
-    function format(val, formatPattern, maxFractionDigits, minFractionDigits) {
+    value: function format(val, formatPattern, maxFractionDigits, minFractionDigits) {
       if (!NumberFormatter_$.isNumeric(val)) {
         return String(val);
       }
@@ -2309,13 +2296,6 @@ var NumberFormatter_NumberFormatter = /*#__PURE__*/function () {
 
       return this.replaceSymbols(result);
     }
-    /**
-     * Replaces the placeholders with real symbols
-     *
-     * @param value
-     * @returns {string}
-     */
-
   }, {
     key: "replaceSymbols",
     value: function replaceSymbols(value) {
@@ -2348,7 +2328,7 @@ var NumberFormatter_NumberFormatter = /*#__PURE__*/function () {
     }
   }, {
     key: "valOrDefault",
-    value: function valOrDefault(def, val) {
+    value: function valOrDefault(val, def) {
       if (typeof val === 'undefined') {
         return def;
       }
@@ -2356,19 +2336,29 @@ var NumberFormatter_NumberFormatter = /*#__PURE__*/function () {
       return val;
     }
   }, {
+    key: "parseFormattedNumber",
+    value: function parseFormattedNumber(value) {
+      var isNegative = value.indexOf(Matomo_Matomo.numbers.symbolMinus) > -1 || value.startsWith('-');
+      var numberParts = value.split(Matomo_Matomo.numbers.symbolDecimal);
+      numberParts.forEach(function (val, index) {
+        numberParts[index] = val.replace(/[^0-9]/g, '');
+      });
+      return (isNegative ? -1 : 1) * parseFloat(numberParts.join('.'));
+    }
+  }, {
     key: "formatNumber",
     value: function formatNumber(value, maxFractionDigits, minFractionDigits) {
-      return this.format(value, Matomo_Matomo.numbers.patternNumber, this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits), this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits));
+      return this.format(value, Matomo_Matomo.numbers.patternNumber, this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits), this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits));
     }
   }, {
     key: "formatPercent",
     value: function formatPercent(value, maxFractionDigits, minFractionDigits) {
-      return this.format(value, Matomo_Matomo.numbers.patternPercent, this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits), this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits));
+      return this.format(value, Matomo_Matomo.numbers.patternPercent, this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits), this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits));
     }
   }, {
     key: "formatCurrency",
     value: function formatCurrency(value, currency, maxFractionDigits, minFractionDigits) {
-      var formatted = this.format(value, Matomo_Matomo.numbers.patternCurrency, this.valOrDefault(this.defaultMaxFractionDigits, maxFractionDigits), this.valOrDefault(this.defaultMinFractionDigits, minFractionDigits));
+      var formatted = this.format(value, Matomo_Matomo.numbers.patternCurrency, this.valOrDefault(maxFractionDigits, this.defaultMaxFractionDigits), this.valOrDefault(minFractionDigits, this.defaultMinFractionDigits));
       return formatted.replace('¤', currency);
     }
   }, {
