@@ -206,7 +206,7 @@ describe("UsersManager", function () {
       await page.focus('.modal.open #currentUserPassword');
       await page.waitForTimeout(250);
       expect(await modal.screenshot()).to.matchImage({
-          imageName: 'delete_bulk_confirm',
+          imageName: 'delete_single_confirm',
           comparisonThreshold: 0.025
       });
   });
