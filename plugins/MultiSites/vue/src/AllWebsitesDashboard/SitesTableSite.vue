@@ -41,11 +41,12 @@
     </td>
 
     <td :colspan="displaySparkline ? 1 : 2">
-      <template v-if="!site.isGroup && !!site[evolutionMetric]">
+      <template v-if="!site.isGroup && sparklineMetric in site">
         <img :src="evolutionIconSrc" alt="" />
         <span :class="evolutionTrendClass">
           {{ calculateAndFormatEvolution(
-                site[sparklineMetric], site[`previous_${sparklineMetric}`], true) }}
+                site[sparklineMetric], site[`previous_${sparklineMetric}`] * site.ratio, true
+             ) }}
         </span>
       </template>
     </td>

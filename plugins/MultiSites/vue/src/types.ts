@@ -17,6 +17,7 @@ export interface DashboardMetrics {
   previous_nb_pageviews: number;
   nb_visits: number;
   previous_nb_visits: number;
+  ratio: number;
   revenue: number;
   previous_revenue: number;
 }
