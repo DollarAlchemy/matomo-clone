@@ -307,7 +307,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $paidPlugins = $this->plugins->getAllPaidPlugins();
 
         $updateData = [
-            'paidPluginsToInstallAtOnce' => $this->getPaidPluginsToInstallAtOnceData($paidPlugins),
             'isValidConsumer' => $this->consumer->isValidConsumer(),
         ];
 

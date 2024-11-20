@@ -13,6 +13,7 @@
     <div class="manage-license-key-intro" v-html="$sanitize(manageLicenseKeyIntro)"></div>
 
     <InstallAllPaidPluginsButton
+      :disabled="isUpdating"
     />
 
     <div class="manage-license-key-input">

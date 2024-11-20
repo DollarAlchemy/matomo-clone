@@ -10,7 +10,7 @@
     <button
       class="btn installAllPaidPluginsAtOnceButton"
       @click.prevent="onInstallAllPaidPlugins()"
-      :disabled="disabled"
+      :disabled="disabled || loading"
     >
       <MatomoLoader v-if="loading"/>
       {{ translate('Marketplace_InstallPurchasedPlugins') }}
@@ -58,14 +58,11 @@ import {
 interface installAllPaidPluginsButton {
   paidPluginsToInstallAtOnce: Array<string>;
   installNonce: string;
+  loading: boolean;
 }
 export default defineComponent({
   components: { MatomoLoader },
   props: {
-    loading: {
-      type: Boolean,
-      required: false,
-    },
     disabled: {
       type: Boolean,
       required: false,
@@ -76,24 +73,37 @@ export default defineComponent({
     return {
       paidPluginsToInstallAtOnce: ([]) as Array<string>,
       installNonce: '',
+      loading: false,
     };
   },
   created() {
-    if (Matomo.hasSuperUserAccess) {
-      AjaxHelper.fetch({
-        module: 'Marketplace',
-        action: 'getPaidPluginsToInstallAtOnceParams',
-      }).then((response) => {
-        if (response) {
-          this.paidPluginsToInstallAtOnce = response.paidPluginsToInstallAtOnce ?? [];
-          this.installNonce = response.installAllPluginsNonce ?? '';
-        }
-      });
-    }
+    this.fetchPluginsToInstallAtOnce();
+  },
+  watch: {
+    disabled(newValue: boolean, oldValue: boolean) {
+      if (newValue === false && oldValue === true) {
+        this.fetchPluginsToInstallAtOnce();
+      }
+    },
   },
   methods: {
     onInstallAllPaidPlugins() {
       Matomo.helper.modalConfirm(this.$refs.installAllPaidPluginsAtOnce as HTMLElement);
+    },
+    fetchPluginsToInstallAtOnce() {
+      this.loading = true;
+      if (Matomo.hasSuperUserAccess) {
+        AjaxHelper.fetch({
+          module: 'Marketplace',
+          action: 'getPaidPluginsToInstallAtOnceParams',
+        }).then((response) => {
+          if (response) {
+            this.paidPluginsToInstallAtOnce = response.paidPluginsToInstallAtOnce ?? [];
+            this.installNonce = response.installAllPluginsNonce ?? '';
+          }
+          this.loading = false;
+        });
+      }
     },
   },
   computed: {

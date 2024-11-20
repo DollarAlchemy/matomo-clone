@@ -27,7 +27,6 @@
     <div class="installAllPaidPlugins" v-if="installAllPaidPluginsVisible">
       <InstallAllPaidPluginsButton
         :disabled="installDisabled"
-        :loading="installLoading"
       />
     </div>
 
@@ -64,7 +63,7 @@ import {
 import { InstallAllPaidPluginsButton } from 'CorePluginsAdmin';
 import Marketplace from '../Marketplace/Marketplace.vue';
 
-import { TObject, TObjectArray } from '../types';
+import { TObject } from '../types';
 
 interface OverviewIntroState {
   updating: boolean;
@@ -85,10 +84,6 @@ export default defineComponent({
     isPluginsAdminEnabled: Boolean,
     isMultiServerEnvironment: Boolean,
     hasSomeAdminAccess: Boolean,
-    paidPluginsToInstallAtOnce: {
-      type: Array,
-      required: true,
-    },
     installNonce: {
       type: String,
       required: true,
@@ -152,17 +147,11 @@ export default defineComponent({
         ? this.updateData.isValidConsumer
         : this.isValidConsumer) as boolean;
     },
-    getPaidPluginsToInstallAtOnce(): TObjectArray {
-      return (this.updateData && typeof this.updateData.paidPluginsToInstallAtOnce !== 'undefined'
-        ? this.updateData.paidPluginsToInstallAtOnce
-        : this.paidPluginsToInstallAtOnce) as TObjectArray;
-    },
     installAllPaidPluginsVisible(): boolean {
       return ((this.getIsValidConsumer
         && this.isSuperUser
         && this.isAutoUpdatePossible
         && this.isPluginsAdminEnabled
-        && this.getPaidPluginsToInstallAtOnce?.length
       ) || (
         this.installDisabled && this.installLoading
       )) as boolean;
