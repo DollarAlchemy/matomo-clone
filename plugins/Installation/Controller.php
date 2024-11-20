@@ -48,16 +48,6 @@ use Zend_Db_Adapter_Exception;
  */
 class Controller extends ControllerAdmin
 {
-    public function __construct()
-    {
-        $config = Config::getInstance();
-
-        $this->checkInstallationIsNotExpired($config);
-        $this->setUpInstallationExpiration($config, Date::getNowTimestamp());
-
-        parent::__construct();
-    }
-
     public $steps = array(
         'welcome'           => 'Installation_Welcome',
         'systemCheck'       => 'Installation_SystemCheck',
@@ -103,6 +93,8 @@ class Controller extends ControllerAdmin
         Filesystem::deleteAllCacheOnUpdate();
 
         $this->checkPiwikIsNotInstalled($possibleErrorMessage);
+        $this->checkInstallationIsNotExpired();
+
         $view = new View(
             '@Installation/welcome',
             $this->getInstallationSteps(),
@@ -119,8 +111,8 @@ class Controller extends ControllerAdmin
     public function systemCheck()
     {
         $this->checkPiwikIsNotInstalled();
-
         $this->deleteConfigFileIfNeeded();
+        $this->checkInstallationIsNotExpired();
 
         $view = new View(
             '@Installation/systemCheck',
@@ -150,6 +142,7 @@ class Controller extends ControllerAdmin
     public function databaseSetup()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $view = new View(
             '@Installation/databaseSetup',
@@ -188,6 +181,7 @@ class Controller extends ControllerAdmin
     public function tablesCreation()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $view = new View(
             '@Installation/tablesCreation',
@@ -239,6 +233,7 @@ class Controller extends ControllerAdmin
     public function reuseTables()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $steps = $this->getInstallationSteps();
         $steps['tablesCreation'] = 'Installation_ReusingTables';
@@ -273,6 +268,7 @@ class Controller extends ControllerAdmin
     public function setupSuperUser()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $superUserAlreadyExists = Access::doAsSuperUser(function () {
             return count(APIUsersManager::getInstance()->getUsersHavingSuperUserAccess()) > 0;
@@ -327,6 +323,7 @@ class Controller extends ControllerAdmin
     public function firstWebsiteSetup()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         ServerFilesGenerator::createFilesForSecurity();
 
@@ -383,6 +380,7 @@ class Controller extends ControllerAdmin
     public function trackingCode()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $view = new View(
             '@Installation/trackingCode',
@@ -427,6 +425,7 @@ class Controller extends ControllerAdmin
     public function finished()
     {
         $this->checkPiwikIsNotInstalled();
+        $this->checkInstallationIsNotExpired();
 
         $view = new View(
             '@Installation/finished',
@@ -781,12 +780,15 @@ class Controller extends ControllerAdmin
         return $view->render();
     }
 
-    private function checkInstallationIsNotExpired(Config $config): void
+    private function checkInstallationIsNotExpired(): void
     {
+        $config = Config::getInstance();
+
         if (
             empty($config->General['installation_first_accessed'])
             || !is_numeric($config->General['installation_first_accessed'])
         ) {
+            $this->setUpInstallationExpiration($config, Date::getNowTimestamp());
             return;
         }
 
@@ -800,11 +802,6 @@ class Controller extends ControllerAdmin
 
     private function setUpInstallationExpiration(Config $config, int $timestamp): void
     {
-        if (SettingsPiwik::isMatomoInstalled()) {
-            // don't do anything if installation has been completed
-            return;
-        }
-
         if (
             !empty($config->General['installation_first_accessed'])
             && is_numeric($config->General['installation_first_accessed'])
