@@ -796,7 +796,22 @@ class Controller extends ControllerAdmin
         $threeDaysAgo = Date::getNowTimestamp() - (3 * 24 * 60 * 60);
 
         if ($firstAccess < $threeDaysAgo) {
-            throw new Exception('This installation has expired, please delete installation_first_accessed from config.ini.php to reset');
+            Piwik::exitWithErrorMessage(
+                Piwik::translate('Installation_ErrorExpired1') .
+                "\n<br/>" .
+                Piwik::translate('Installation_ErrorExpired2') .
+                "\n<ul>" .
+                "\n<li>" . Piwik::translate('Installation_ErrorExpired3', ['<strong>', '</strong>']) . '</li>' .
+                "\n<li>" . Piwik::translate('Installation_ErrorExpired4', ['<strong>', '</strong>']) . '</li>' .
+                "\n<li>" . Piwik::translate('Installation_ErrorExpired5') . '</li>' .
+                "\n</ul>" .
+                Piwik::translate('Installation_ErrorExpired6') .
+                "\n<br/>" .
+                Piwik::translate('Installation_ErrorExpired7', [
+                    '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/guide/installation-maintenance/matomo-on-premise-self-hosted/') . '" rel="noreferrer noopener" target="_blank">',
+                    '</a>'
+                ])
+            );
         }
     }
 
