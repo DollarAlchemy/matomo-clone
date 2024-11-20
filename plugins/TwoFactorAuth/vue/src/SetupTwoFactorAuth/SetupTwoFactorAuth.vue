@@ -52,15 +52,14 @@
           {{ translate('TwoFactorAuth_SetupAuthenticatorOnDevice') }}
         </h2>
         <InstallOTPApp />
-        <p><span v-html="$sanitize(setupAuthenticatorOnDeviceStep2_1)"></span></p>
-        <p><span v-html="$sanitize(setupAuthenticatorOnDeviceStep2_2)"></span></p>
+        <p v-html="$sanitize(setupAuthenticatorOnDeviceStep2ShowCodes)"></p>
         <p>
           <br />
           <button
             class="btn goToStep3"
             v-show="step >= 2"
             @click="showQrCodeModal()"
-          >{{ translate('TwoFactorAuth_ShowQRCode') }}</button>
+          >{{ translate('TwoFactorAuth_ShowCodes') }}</button>
         </p>
       </div>
       <a
@@ -122,6 +121,7 @@
       <MatomoDialog
         v-model="qrCodeDialogVisible"
         @validation="closeQrCodeModal(); nextStep()"
+        :options="{ focusSelector: '.modal-action.btn'}"
       >
         <div
           class="ui-confirm two-fa-qr-code-dialog"
@@ -129,7 +129,7 @@
           <h2>{{ translate('TwoFactorAuth_Your2FaAuthSecret') }}</h2>
           <div class="row">
             <div class="col l8 offset-l2 m10 offset-m1 s12 center-align">
-              <p>Open your OTP app and scan this QR code</p>
+              <p>{{ translate('TwoFactorAuth_ShowCodeModalInstructions1') }}</p>
               <p>
                 <span
                   id="qrcode"
@@ -137,17 +137,19 @@
                   title
                 />
               </p>
-              <p>or manually enter the following code</p>
+              <p>{{ translate('TwoFactorAuth_ShowCodeModalInstructions2') }}</p>
 
               <div class="text-code">
                 <pre v-copy-to-clipboard="{}">{{ newSecret}}</pre>
               </div>
+
+              <p v-html="$sanitize(showCodeModalInstructions3)"></p>
             </div>
           </div>
 
           <div class="row">
             <div class="col l8 offset-l2 m10 offset-m1 s12">
-              <h3>Don't have an OTP app?</h3>
+              <h3>{{ translate('TwoFactorAuth_DontHaveOTPApp') }}</h3>
               <InstallOTPApp />
             </div>
           </div>
@@ -283,15 +285,15 @@ export default defineComponent({
     },
   },
   computed: {
-    setupAuthenticatorOnDeviceStep2_1() {
+    setupAuthenticatorOnDeviceStep2ShowCodes() {
       return translate(
-        'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2QR1',
-        translate('TwoFactorAuth_ShowQRCode'),
+        'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2ShowCodes',
+        translate('TwoFactorAuth_ShowCodes'),
       );
     },
-    setupAuthenticatorOnDeviceStep2_2() {
+    showCodeModalInstructions3() {
       return translate(
-        'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2QR2',
+        'TwoFactorAuth_ShowCodeModalInstructions3',
         translate('General_Continue'),
       );
     },

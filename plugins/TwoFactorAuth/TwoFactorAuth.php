@@ -63,9 +63,12 @@ class TwoFactorAuth extends \Piwik\Plugin
         $translations[] = 'TwoFactorAuth_AuthenticationCode';
         $translations[] = 'TwoFactorAuth_VerifyAuthCodeHelp';
         $translations[] = 'General_Confirm';
-        $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2QR1';
-        $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2QR2';
-        $translations[] = 'TwoFactorAuth_ShowQRCode';
+        $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2ShowCodes';
+        $translations[] = 'TwoFactorAuth_ShowCodes';
+        $translations[] = 'TwoFactorAuth_DontHaveOTPApp';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions1';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions2';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions3';
         $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDevice';
         $translations[] = 'TwoFactorAuth_TwoFactorAuthentication';
         $translations[] = 'General_Error';
