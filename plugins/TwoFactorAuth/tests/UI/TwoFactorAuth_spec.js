@@ -21,7 +21,7 @@ describe("TwoFactorAuth", function () {
     {
         await (await page.jQuery('.modal.open .modal-footer a:contains('+button+')')).click();
         await page.waitForNetworkIdle();
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(250);
         await page.waitForNetworkIdle();
     }
 
@@ -294,10 +294,16 @@ describe("TwoFactorAuth", function () {
         expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step2');
     });
 
+    it('should force user to setup 2fa when not set up yet but enforced step 2 show codes', async function () {
+        await page.click('.setupTwoFactorAuthentication .showOtpCodes');
+        await page.waitForSelector('.modal.open', {visible: true});
+        await page.waitForTimeout(250);
+
+        expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step2_showcodes');
+    });
+
     it('should force user to setup 2fa when not set up yet but enforced step 3', async function () {
-        await page.click('.setupTwoFactorAuthentication .goToStep3');
-        await page.waitForSelector('.setupConfirmAuthCodeForm', {visible: true});
-        await page.waitForTimeout(100);
+        selectModalButton('Continue');
         await page.mouse.move(-10, -10);
         expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step3');
     });
