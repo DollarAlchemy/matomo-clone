@@ -229,8 +229,10 @@ describe("TwoFactorAuth", function () {
 
         // remove
         await page.evaluate(function () {
-          $('#qrcode img').src('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII');
-          $('#qrcode img').attr('width', 200).attr('height', 200);
+          const qrCodeImg = $('#qrcode img');
+          qrCodeImg.attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII');
+          qrCodeImg.attr('width', 200);
+          qrCodeImg.attr('height', 200);
         });
 
         const modal = await page.$('.modal.open');
@@ -239,7 +241,7 @@ describe("TwoFactorAuth", function () {
 
     it('should show the manual OTP code in modal', async function () {
         const codeLength = await page.evaluate(() => {
-            return $('.modal.open .text-code').text().length;
+            return $('.modal.open .text-code pre').text().length;
         });
 
         expect(codeLength).to.equal(16);
@@ -253,6 +255,7 @@ describe("TwoFactorAuth", function () {
     });
 
     it('should move to third step in setup - step 3', async function () {
+        await page.waitForTimeout(250);
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
         await page.waitForSelector('.modal.open', {visible: true});
 
