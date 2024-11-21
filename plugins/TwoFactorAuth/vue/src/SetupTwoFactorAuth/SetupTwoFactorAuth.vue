@@ -56,7 +56,7 @@
         <p>
           <br />
           <button
-            class="btn goToStep3"
+            class="btn showOtpCodes"
             v-show="step >= 2"
             @click="showQrCodeModal()"
           >{{ translate('TwoFactorAuth_ShowCodes') }}</button>

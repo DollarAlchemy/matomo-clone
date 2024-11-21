@@ -219,30 +219,44 @@ describe("TwoFactorAuth", function () {
         await page.waitForNetworkIdle();
         await page.click('.setupTwoFactorAuthentication .goToStep2');
         await page.waitForNetworkIdle();
-        await page.evaluate(function () {
-            $('#qrcode').parent().hide();
-        });
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step2');
     });
 
-    it('should show the OTP code in modal', async function () {
-        await page.click('.setupTwoFactorAuthentication .setupStep2Link');
+    it('should open the OTP codes in modal', async function () {
+        await page.click('.setupTwoFactorAuthentication .showOtpCodes');
         await page.waitForSelector('.modal.open', {visible: true});
 
+        // remove
+        await page.evaluate(function () {
+          $('#qrcode img').src('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII');
+          $('#qrcode img').attr('width', 200).attr('height', 200);
+        });
+
+        const modal = await page.$('.modal.open');
+        expect(await modal.screenshot()).to.matchImage('twofa_setup_step2_showcodes');
+    });
+
+    it('should show the manual OTP code in modal', async function () {
         const codeLength = await page.evaluate(() => {
-            return $('.modal.open code').text().length;
+            return $('.modal.open .text-code').text().length;
         });
 
         expect(codeLength).to.equal(16);
     });
 
+    it('should not show step 3 if OTP codes modal just closed', async function () {
+        selectModalButton('Cancel');
+
+        const element = await page.$('#content');
+        expect(await element.screenshot()).to.matchImage('twofa_setup_step2');
+    });
+
     it('should move to third step in setup - step 3', async function () {
-        await page.click('.modal.open .modal-close'); // close modal
-        await page.waitForTimeout(500);
-        await page.click('.setupTwoFactorAuthentication .goToStep3');
-        await page.waitForSelector('.setupConfirmAuthCodeForm', {visible: true});
-        await page.waitForTimeout(100);
+        await page.click('.setupTwoFactorAuthentication .showOtpCodes');
+        await page.waitForSelector('.modal.open', {visible: true});
+
+        selectModalButton('Continue');
 
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step3');
