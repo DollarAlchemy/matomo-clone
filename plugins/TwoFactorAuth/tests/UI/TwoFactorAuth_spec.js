@@ -226,6 +226,7 @@ describe("TwoFactorAuth", function () {
     it('should open the OTP codes in modal', async function () {
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
         await page.waitForSelector('.modal.open', {visible: true});
+        await page.waitForTimeout(250);
 
         // remove
         await page.evaluate(function () {
@@ -307,6 +308,7 @@ describe("TwoFactorAuth", function () {
 
     it('should force user to setup 2fa when not set up yet but enforced step 3', async function () {
         selectModalButton('Continue');
+        await page.waitForTimeout(250);
         await page.mouse.move(-10, -10);
         expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step3');
     });
