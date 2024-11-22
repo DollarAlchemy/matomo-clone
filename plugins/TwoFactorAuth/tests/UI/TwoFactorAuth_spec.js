@@ -219,11 +219,14 @@ describe("TwoFactorAuth", function () {
         await page.waitForNetworkIdle();
         await page.click('.setupTwoFactorAuthentication .goToStep2');
         await page.waitForNetworkIdle();
+        await page.waitForTimeout(250);
+
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step2');
     });
 
     it('should open the OTP codes in modal', async function () {
+        await page.waitForTimeout(250);
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
         await page.waitForSelector('.modal.open', {visible: true});
         await page.waitForTimeout(250);
@@ -261,6 +264,7 @@ describe("TwoFactorAuth", function () {
         await page.waitForSelector('.modal.open', {visible: true});
 
         selectModalButton('Continue');
+        await page.waitForTimeout(250);
 
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step3');
