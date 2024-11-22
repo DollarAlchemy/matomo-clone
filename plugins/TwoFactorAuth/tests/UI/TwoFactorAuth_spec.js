@@ -219,7 +219,7 @@ describe("TwoFactorAuth", function () {
         await page.waitForNetworkIdle();
         await page.click('.setupTwoFactorAuthentication .goToStep2');
         await page.waitForNetworkIdle();
-        await page.waitForTimeout(250);
+        await page.waitForTimeout(500);
 
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step2');
@@ -229,7 +229,7 @@ describe("TwoFactorAuth", function () {
         await page.waitForTimeout(250);
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
         await page.waitForSelector('.modal.open', {visible: true});
-        await page.waitForTimeout(250);
+        await page.waitForTimeout(500);
 
         // remove
         await page.evaluate(function () {
