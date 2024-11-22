@@ -196,8 +196,9 @@ var Piwik_Overlay = (function () {
             }
             $iframe.attr('src', iframeUrl);
             showLoading();
+        } else {
+            loadSidebar(location);
         }
-        loadSidebar(location);
 
         updateComesFromInsideFrame = false;
     }
