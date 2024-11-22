@@ -231,7 +231,7 @@ class NumberFormatter
             $patternOther = $patternPrefix . $factor . 'Other';
 
             if (
-                round($value / $factor) === 1
+                round($value / $factor) === 1.0
                 && $this->translator->translate($patternOne) !== ''
             ) {
                 $finalFactor = $factor;
