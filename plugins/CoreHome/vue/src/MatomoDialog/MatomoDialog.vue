@@ -25,7 +25,7 @@ export default defineComponent({
     options: {
       type: Object,
       required: false,
-      default: function _default() { return {}; },
+      default: () => ({}),
     },
   },
   emits: ['yes', 'no', 'closeEnd', 'close', 'validation', 'update:modelValue'],
