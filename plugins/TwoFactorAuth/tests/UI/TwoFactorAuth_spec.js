@@ -253,6 +253,7 @@ describe("TwoFactorAuth", function () {
 
     it('should not show step 3 if OTP codes modal just closed', async function () {
         selectModalButton('Cancel');
+        await page.waitForTimeout(500);
 
         const element = await page.$('#content');
         expect(await element.screenshot()).to.matchImage('twofa_setup_step2');
@@ -307,12 +308,15 @@ describe("TwoFactorAuth", function () {
         await page.waitForSelector('.modal.open', {visible: true});
         await page.waitForTimeout(250);
 
-        expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step2_showcodes');
+        const modal = await page.$('.modal.open');
+        await page.waitForTimeout(250);
+        expect(await modal.screenshot()).to.matchImage('twofa_forced_step2_showcodes');
     });
 
     it('should force user to setup 2fa when not set up yet but enforced step 3', async function () {
         selectModalButton('Continue');
         await page.waitForTimeout(250);
+
         await page.mouse.move(-10, -10);
         expect(await page.screenshotSelector('.loginSection,#content,#notificationContainer')).to.matchImage('twofa_forced_step3');
     });
