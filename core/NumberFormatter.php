@@ -161,7 +161,8 @@ class NumberFormatter
     }
 
     /**
-     * Formats given number as percent value
+     * Formats given number as currency value
+     *
      * @param string|int|float $value
      * @param string $currency
      * @param int $precision
@@ -189,7 +190,7 @@ class NumberFormatter
 
 
     /**
-     * Formats a given number in compact format
+     * Formats a given number as currency value in compact format
      *
      * @see \Piwik\NumberFormatter::format()
      *
