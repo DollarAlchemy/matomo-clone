@@ -231,7 +231,7 @@ describe("TwoFactorAuth", function () {
         await page.waitForSelector('.modal.open', {visible: true});
         await page.waitForTimeout(500);
 
-        // remove
+        // replace QR with an image
         await page.evaluate(function () {
           const qrCodeImg = $('#qrcode img');
           qrCodeImg.attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII');
@@ -306,6 +306,15 @@ describe("TwoFactorAuth", function () {
 
     it('should force user to setup 2fa when not set up yet but enforced step 2 show codes', async function () {
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
+        await page.waitForTimeout(500);
+
+        // replace QR with an image
+        await page.evaluate(function () {
+          const qrCodeImg = $('#qrcode img');
+          qrCodeImg.attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII');
+          qrCodeImg.attr('width', 200);
+          qrCodeImg.attr('height', 200);
+        });
 
         await page.evaluate(() => $('.modal.open').css('max-height', '90%').css('top', '5%'));
         const modal = await page.waitForSelector('.modal.open', { visible: true });
