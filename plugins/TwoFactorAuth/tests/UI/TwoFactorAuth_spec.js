@@ -239,7 +239,8 @@ describe("TwoFactorAuth", function () {
           qrCodeImg.attr('height', 200);
         });
 
-        const modal = await page.$('.modal.open');
+        const modal = await page.waitForSelector('.modal.open', { visible: true });
+        await page.waitForTimeout(1000);
         expect(await modal.screenshot()).to.matchImage('twofa_setup_step2_showcodes');
     });
 
@@ -305,10 +306,9 @@ describe("TwoFactorAuth", function () {
 
     it('should force user to setup 2fa when not set up yet but enforced step 2 show codes', async function () {
         await page.click('.setupTwoFactorAuthentication .showOtpCodes');
-        await page.waitForSelector('.modal.open', {visible: true});
-        await page.waitForTimeout(500);
 
-        const modal = await page.$('.modal.open');
+        const modal = await page.waitForSelector('.modal.open', { visible: true });
+        await page.waitForTimeout(1000);
         expect(await modal.screenshot()).to.matchImage('twofa_forced_step2_showcodes');
     });
 
