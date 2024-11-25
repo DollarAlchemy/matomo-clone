@@ -12,10 +12,6 @@
   >
     <div class="manage-license-key-intro" v-html="$sanitize(manageLicenseKeyIntro)"></div>
 
-    <InstallAllPaidPluginsButton
-      :disabled="isUpdating"
-    />
-
     <div class="manage-license-key-input">
       <Field
         uicontrol="text"
@@ -61,7 +57,7 @@ import {
   NotificationsStore,
   externalLink,
 } from 'CoreHome';
-import { Field, SaveButton, InstallAllPaidPluginsButton } from 'CorePluginsAdmin';
+import { Field, SaveButton } from 'CorePluginsAdmin';
 
 interface LicenseKeyState {
   licenseKey: string;
@@ -78,7 +74,6 @@ export default defineComponent({
     ContentBlock,
     SaveButton,
     ActivityIndicator,
-    InstallAllPaidPluginsButton,
   },
   data(): LicenseKeyState {
     return {
