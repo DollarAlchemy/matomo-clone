@@ -37,20 +37,20 @@ class ArchiveState
         $periodsTsArchived = [];
 
         foreach ($archiveData as $archive) {
-            $idSite = $archive['idsite'];
+            $idSite = (int) $archive['idsite'];
             $period = $archive['date1'] . ',' . $archive['date2'];
 
             $periodsTsArchived[$idSite][$period] = $archive['ts_archived'];
         }
 
         foreach ($periodsTsArchived as $idSite => $periods) {
-            $site = new Site($idSite);
+            $siteTimezone = Site::getTimezoneFor($idSite);
 
             foreach ($periods as $period => $tsArchived) {
-                $state = $this->checkArchiveStates($site, $period, $archiveIds, $archiveStates);
+                $state = $this->checkArchiveStates($idSite, $period, $archiveIds, $archiveStates);
 
                 $range = new Range('day', $period);
-                $state = $this->checkTsArchived($state, $site, $range, $tsArchived);
+                $state = $this->checkTsArchived($state, $siteTimezone, $range, $tsArchived);
 
                 if (null === $state) {
                     // do not set metadata, if no state was determined,
@@ -73,13 +73,11 @@ class ArchiveState
      * @param array<int, array<string, array<int, int>>> $archiveStates
      */
     private function checkArchiveStates(
-        Site $site,
+        int $idSite,
         string $period,
         array $archiveIds,
         array $archiveStates
     ): ?string {
-        $idSite = $site->getId();
-
         $availableStates = array_intersect_key(
             $archiveStates[$idSite][$period] ?? [],
             array_flip($archiveIds[$period] ?? [])
@@ -102,7 +100,7 @@ class ArchiveState
 
     private function checkTsArchived(
         ?string $state,
-        Site $site,
+        string $siteTimezone,
         Range $range,
         string $tsArchived
     ): ?string {
@@ -111,7 +109,7 @@ class ArchiveState
             return $state;
         }
 
-        $rangeEndTimestamp = $range->getDateTimeEnd()->setTimezone($site->getTimezone())->getTimestamp();
+        $rangeEndTimestamp = $range->getDateTimeEnd()->setTimezone($siteTimezone)->getTimestamp();
         $tsArchivedTimestamp = Date::factory($tsArchived)->getTimestamp();
 
         if ($tsArchivedTimestamp <= $rangeEndTimestamp) {
