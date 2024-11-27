@@ -14,7 +14,6 @@ namespace Piwik\Archive;
 use Piwik\DataAccess\ArchiveWriter;
 use Piwik\DataTable;
 use Piwik\Date;
-use Piwik\Period\Range;
 use Piwik\Site;
 
 class ArchiveState
@@ -34,12 +33,14 @@ class ArchiveState
         array $archiveIds,
         array $archiveStates
     ): void {
+        $periodsEndDays = [];
         $periodsTsArchived = [];
 
         foreach ($archiveData as $archive) {
             $idSite = (int) $archive['idsite'];
             $period = $archive['date1'] . ',' . $archive['date2'];
 
+            $periodsEndDays[$idSite][$period] = $archive['date2'];
             $periodsTsArchived[$idSite][$period] = $archive['ts_archived'];
         }
 
@@ -47,10 +48,10 @@ class ArchiveState
             $siteTimezone = Site::getTimezoneFor($idSite);
 
             foreach ($periods as $period => $tsArchived) {
-                $state = $this->checkArchiveStates($idSite, $period, $archiveIds, $archiveStates);
+                $periodEndDay = $periodsEndDays[$idSite][$period];
 
-                $range = new Range('day', $period);
-                $state = $this->checkTsArchived($state, $siteTimezone, $range, $tsArchived);
+                $state = $this->checkArchiveStates($idSite, $period, $archiveIds, $archiveStates);
+                $state = $this->checkTsArchived($state, $siteTimezone, $periodEndDay, $tsArchived);
 
                 if (null === $state) {
                     // do not set metadata, if no state was determined,
@@ -101,7 +102,7 @@ class ArchiveState
     private function checkTsArchived(
         ?string $state,
         string $siteTimezone,
-        Range $range,
+        string $periodEndDay,
         string $tsArchived
     ): ?string {
         if (self::COMPLETE !== $state) {
@@ -109,10 +110,10 @@ class ArchiveState
             return $state;
         }
 
-        $rangeEndTimestamp = $range->getDateTimeEnd()->setTimezone($siteTimezone)->getTimestamp();
-        $tsArchivedTimestamp = Date::factory($tsArchived)->getTimestamp();
+        $datePeriodEnd = Date::factory($periodEndDay . ' 23:59:59')->setTimezone($siteTimezone);
+        $dateArchived = Date::factory($tsArchived);
 
-        if ($tsArchivedTimestamp <= $rangeEndTimestamp) {
+        if ($dateArchived->isEarlier($datePeriodEnd)) {
             return self::INCOMPLETE;
         }
 
