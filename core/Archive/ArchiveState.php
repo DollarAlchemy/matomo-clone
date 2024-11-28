@@ -35,6 +35,7 @@ class ArchiveState
     ): void {
         $periodsEndDays = [];
         $periodsTsArchived = [];
+        $archiveIdsFlipped = [];
 
         foreach ($archiveData as $archive) {
             $idSite = (int) $archive['idsite'];
@@ -44,13 +45,17 @@ class ArchiveState
             $periodsTsArchived[$idSite][$period] = $archive['ts_archived'];
         }
 
+        foreach ($archiveIds as $period => $periodArchiveIds) {
+            $archiveIdsFlipped[$period] = array_flip($periodArchiveIds);
+        }
+
         foreach ($periodsTsArchived as $idSite => $periods) {
             $siteTimezone = Site::getTimezoneFor($idSite);
 
             foreach ($periods as $period => $tsArchived) {
                 $periodEndDay = $periodsEndDays[$idSite][$period];
 
-                $state = $this->checkArchiveStates($idSite, $period, $archiveIds, $archiveStates);
+                $state = $this->checkArchiveStates($idSite, $period, $archiveIdsFlipped, $archiveStates);
                 $state = $this->checkTsArchived($state, $siteTimezone, $periodEndDay, $tsArchived);
 
                 if (null === $state) {
@@ -70,18 +75,23 @@ class ArchiveState
     }
 
     /**
-     * @param array<string, array<int>> $archiveIds
+     * @param array<string, array<int, bool>> $archiveIdsFlipped
      * @param array<int, array<string, array<int, int>>> $archiveStates
      */
     private function checkArchiveStates(
         int $idSite,
         string $period,
-        array $archiveIds,
+        array $archiveIdsFlipped,
         array $archiveStates
     ): ?string {
+        if (!isset($archiveStates[$idSite][$period]) || !isset($archiveIdsFlipped[$period])) {
+            // do not determine state if no archives were used
+            return null;
+        }
+
         $availableStates = array_intersect_key(
-            $archiveStates[$idSite][$period] ?? [],
-            array_flip($archiveIds[$period] ?? [])
+            $archiveStates[$idSite][$period],
+            $archiveIdsFlipped[$period]
         );
 
         if ([] === $availableStates) {
