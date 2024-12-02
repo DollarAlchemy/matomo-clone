@@ -176,7 +176,7 @@ describe('ResetPassword', function () {
             const notification = await page.$('.notification-error .notification-body');
             const notificationText = await notification.getProperty('textContent');
 
-            expect(notificationText).to.match(/The token is invalid or has expired/i);
+            expect(notificationText).to.match(/We noticed you tried to cancel your password reset request. Unfortunately, this link is no longer valid because it has either expired, invalid or has been used already./i);
         });
     });
 });
