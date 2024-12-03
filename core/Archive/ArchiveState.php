@@ -123,7 +123,7 @@ class ArchiveState
         $datePeriodEnd = Date::factory($periodEndDay . ' 23:59:59')->setTimezone($siteTimezone);
         $dateArchived = Date::factory($tsArchived);
 
-        if ($dateArchived->isEarlier($datePeriodEnd)) {
+        if (!$datePeriodEnd->isEarlier($dateArchived)) {
             return self::INCOMPLETE;
         }
 
