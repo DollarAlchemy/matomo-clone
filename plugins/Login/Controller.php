@@ -485,11 +485,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $resetToken = $request->getStringParameter('resetToken');
 
         try {
+            Nonce::checkNonce(self::NONCE_CONFIRMCANCELRESETPASSWORD);
             $this->passwordResetter->cancelPasswordResetProcess($login, $resetToken);
-            $isNonceValid = Nonce::verifyNonce(self::NONCE_CONFIRMCANCELRESETPASSWORD, $request->getStringParameter('nonce'));
-            if ($isNonceValid === false) {
-                throw new Exception('Cannot verify request');
-            }
         } catch (Exception $ex) {
             Log::debug($ex);
             $errorMessage = $ex->getMessage();
